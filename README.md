@@ -1,1 +1,1 @@
-# MTGCardManager
+# MTG Card Manager
