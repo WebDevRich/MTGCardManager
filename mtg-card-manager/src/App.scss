@@ -1,6 +1,9 @@
 .App {
 	text-align: center;
 	font-family: 'Roboto', sans-serif;
+	display: grid;
+	grid-template-columns: repeat(12, 1fr);
+	grid-gap: 20px;
 
 	&-logo {
 		animation: App-logo-spin infinite 20s linear;
@@ -21,6 +24,15 @@
 
 	&-link {
 		color: #61dafb;
+	}
+}
+
+.search-result {
+	grid-column: span 3;
+
+	img {
+		width: 100%;
+		height: auto;
 	}
 }
 
