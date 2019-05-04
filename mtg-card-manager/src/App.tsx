@@ -1,5 +1,6 @@
 import * as React from 'react';
 import './App.scss';
+import SearchBar from './SearchBar/SearchBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
 interface AppState {
@@ -45,6 +46,7 @@ export class App extends React.PureComponent<{}, AppState> {
 
 				{/* App */}
 				<div className='App'>
+					<SearchBar />
 					{this.state.cards}
 				</div>
 			</>
