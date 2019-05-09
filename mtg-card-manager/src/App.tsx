@@ -5,6 +5,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 
 interface AppState {
 	cards: [];
+	searchTerm: string;
 }
 
 export class App extends React.PureComponent<{}, AppState> {
@@ -14,27 +15,16 @@ export class App extends React.PureComponent<{}, AppState> {
 
 		this.state = {
 			cards: [],
+			searchTerm: '',
 		}
+
+		this.loadNewCards = this.loadNewCards.bind(this);
 	}
 
-	componentDidMount() {
-		fetch('https://api.scryfall.com/cards/search?order=released&q=riot')
-			.then(response => response.json())
-			.then(response => {
-				let cards = response.data.map((cardPic:any) => {
-					return(
-						<div className='search-result' key={cardPic.results}>
-							<img src={cardPic.image_uris.normal} alt='' />
-						</div>
-					)
-				})
-				this.setState({
-					cards: cards,
-				});
-			})
-			.catch(error =>
-				console.log(error)
-			)
+	private loadNewCards(newCards:[]) {
+		this.setState({
+			cards: newCards,
+		});
 	}
 
 	public render() {
@@ -46,7 +36,9 @@ export class App extends React.PureComponent<{}, AppState> {
 
 				{/* App */}
 				<div className='App'>
-					<SearchBar />
+					<SearchBar
+						newCards={this.loadNewCards}
+					/>
 					{this.state.cards}
 				</div>
 			</>
