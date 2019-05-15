@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import CardDisplay from './CardDisplay/CardDisplay';
+import CardGrid from './CardGrid/CardGrid';
 import ErrorMessage from './ErrorMessage/ErrorMessage';
 import SearchBar from './SearchBar/SearchBar';
 import SingleCard from './SingleCard/SingleCard';
@@ -100,7 +100,7 @@ export class App extends React.PureComponent<AppProps, AppState> {
 						submitSearch={this.submitSearch}
 						hasErrored={this.hasErrored}
 					/>
-					<CardDisplay>
+					<CardGrid>
 
 						{this.state.cards}
 
@@ -108,7 +108,7 @@ export class App extends React.PureComponent<AppProps, AppState> {
 							<ErrorMessage />
 						}
 
-					</CardDisplay>
+					</CardGrid>
 				</div>
 			</>
 		);
