@@ -1,12 +1,13 @@
 import * as React from 'react';
-import { InputBase, Button } from '@material-ui/core';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
+import PrimaryButton from '../PrimaryButton/PrimaryButton';
+import TextInput from '../TextInput/TextInput';
 
 export interface SearchBarProps {
-	newCards(cards:[]):void;
-	displayError(hasError:boolean):void;
+	submitSearch(value:string):void;
+	hasErrored(hasErrored:boolean):void;
 }
 
 export interface SearchBarState {
@@ -17,7 +18,7 @@ export interface SearchBarState {
 
 const styles = (theme: Theme) =>
   createStyles({
-		searchBox: {
+		searchBar: {
 			gridColumn: '1 / -1',
 			padding: 20,
 			display: 'flex',
@@ -43,16 +44,6 @@ const styles = (theme: Theme) =>
 		searchForm: {
 			display: 'flex;'
 		},
-    inputInput: {
-      paddingTop: theme.spacing.unit,
-      paddingRight: theme.spacing.unit,
-      paddingBottom: theme.spacing.unit,
-      paddingLeft: theme.spacing.unit,
-			width: '100%',
-      [theme.breakpoints.up('sm')]: {
-        width: 200,
-      },
-		}
 	});
 
 export interface SearchBarProps extends WithStyles<typeof styles> {}
@@ -68,10 +59,11 @@ export class SearchBar extends React.PureComponent<SearchBarProps, SearchBarStat
 			error: false,
 		}
 
+		this.searchTerm = this.searchTerm.bind(this);
 		this.submitSearch = this.submitSearch.bind(this);
 	}
 
-	private searchTermValueChange(value:any) {
+	private searchTerm(value:any) {
 		this.setState({
 			searchTerm: value
 		});
@@ -79,32 +71,7 @@ export class SearchBar extends React.PureComponent<SearchBarProps, SearchBarStat
 
 	private submitSearch(e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>) {
 		e.preventDefault();
-		const query = this.state.searchTerm;
-		fetch(`https://api.scryfall.com/cards/search?order=released&q=${query}`)
-			.then(response => response.json())
-			.then(response => {
-				console.log(response.data[0].image_uris.border_crop);
-				let cards = response.data.map((cardPic:any, index:number) => {
-					return(
-						<div className='search-item' key={index}>
-							<img src={cardPic.image_uris.border_crop} alt='' key={index} />
-						</div>
-					)
-				})
-				this.setState({
-					cards: cards,
-				}, () => {
-					this.props.newCards(this.state.cards);
-				});
-			})
-			.catch(error => {
-				this.setState({
-					error: true,
-				}, () => {
-					this.props.displayError(this.state.error);
-				});
-				console.log(error)
-			})
+		this.props.submitSearch(this.state.searchTerm);
 	}
 
 	public render() {
@@ -112,21 +79,14 @@ export class SearchBar extends React.PureComponent<SearchBarProps, SearchBarStat
 		const { classes } = this.props;
 
 		return (
-			<div className={classes.searchBox}>
+			<div className={classes.searchBar}>
 				<form noValidate className={classes.searchForm} onSubmit={this.submitSearch}>
 					<div className={classes.search}>
-						<InputBase
-							autoComplete='true'
-							placeholder="Search…"
-							classes={{
-								input: classes.inputInput,
-							}}
-							onChange={event => this.searchTermValueChange(event.target.value)}
-						/>
+						<TextInput inputValue={this.searchTerm} placeholder='Search...' />
 					</div>
-					<Button variant='contained' type='submit' color='primary'>
+					<PrimaryButton>
 						<SearchIcon />
-					</Button>
+					</PrimaryButton>
 				</form>
 			</div>
 		);

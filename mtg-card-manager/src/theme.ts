@@ -10,6 +10,9 @@ export const theme = createMuiTheme({
 			'@global': {
 				body: {
 					backgroundColor: blueGrey[800],
+				},
+				img: {
+					display: 'inherit',
 				}
 			}
 		},

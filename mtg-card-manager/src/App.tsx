@@ -1,8 +1,11 @@
 import * as React from 'react';
-import './App.scss';
 import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import CardDisplay from './CardDisplay/CardDisplay';
+import ErrorMessage from './ErrorMessage/ErrorMessage';
 import SearchBar from './SearchBar/SearchBar';
+import SingleCard from './SingleCard/SingleCard';
+import TransformCard from './TransformCard/TransformCard';
 
 interface AppState {
 	cards: [];
@@ -12,12 +15,12 @@ interface AppState {
 
 const styles = (theme: Theme) =>
   createStyles({
-		errorMessage: {
-			display: 'none',
-			gridColumn: '1 / -1',
-		},
-		errorMessageActive: {
-			display: 'block',
+		cardManager: {
+			textAlign: 'center',
+			fontFamily: 'Roboto, sans-serif',
+			display: 'grid',
+			gridTemplate: 'auto 1fr / 1fr',
+			gridGap: '20px',
 		}
 	});
 
@@ -35,7 +38,8 @@ export class App extends React.PureComponent<AppProps, AppState> {
 		}
 
 		this.loadNewCards = this.loadNewCards.bind(this);
-		this.displayError = this.displayError.bind(this);
+		this.hasErrored = this.hasErrored.bind(this);
+		this.submitSearch = this.submitSearch.bind(this);
 	}
 
 	private loadNewCards(newCards:[]) {
@@ -44,10 +48,41 @@ export class App extends React.PureComponent<AppProps, AppState> {
 		});
 	}
 
-	private displayError(hasError:boolean) {
+	private hasErrored(hasError:boolean) {
 		this.setState({
 			hasError,
 		});
+	}
+
+	private submitSearch(searchTerm:string) {
+		fetch(`https://api.scryfall.com/cards/search?order=released&q=${searchTerm}`)
+			.then(response => response.json())
+			.then(response => {
+				let cards = response.data.map((cardItem:any, index:number) => {
+					return cardItem.image_uris ? (
+						<SingleCard key={index} alt={cardItem.name} src={cardItem.image_uris.border_crop} />
+					) : (
+						<TransformCard
+							faceOneImage={cardItem.card_faces[0].image_uris.border_crop}
+							faceOneName={cardItem.card_faces[0].name}
+							faceTwoImage={cardItem.card_faces[1].image_uris.border_crop}
+							faceTwoName={cardItem.card_faces[1].name}
+							key={index}
+						/>
+					);
+				})
+				this.setState({
+					cards: cards,
+					hasError: false,
+				});
+			})
+			.catch(error => {
+				this.setState({
+					cards: [],
+					hasError: true,
+				});
+				console.log(error)
+			})
 	}
 
 	public render() {
@@ -60,22 +95,20 @@ export class App extends React.PureComponent<AppProps, AppState> {
 				<CssBaseline />
 
 				{/* App */}
-				<div className='App'>
+				<div className={classes.cardManager}>
 					<SearchBar
-						newCards={this.loadNewCards}
-						displayError={this.displayError}
+						submitSearch={this.submitSearch}
+						hasErrored={this.hasErrored}
 					/>
-					<div className='search-results'>
+					<CardDisplay>
 
 						{this.state.cards}
 
-						<div className={`
-							${classes.errorMessage}
-							${this.state.hasError ? classes.errorMessageActive : ''}
-						`}>
-							Something went wrong
-						</div>
-					</div>
+						{this.state.hasError &&
+							<ErrorMessage />
+						}
+
+					</CardDisplay>
 				</div>
 			</>
 		);
