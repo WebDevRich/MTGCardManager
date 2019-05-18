@@ -4,6 +4,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import CardGrid from './CardGrid/CardGrid';
 import ErrorMessage from './ErrorMessage/ErrorMessage';
 import SearchBar from './SearchBar/SearchBar';
+import SignInPage from './SignInPage/SignInPage';
 import SingleCard from './SingleCard/SingleCard';
 import TransformCard from './TransformCard/TransformCard';
 
@@ -12,6 +13,7 @@ interface AppState {
 	// cardNames: string[];
 	hasError: boolean;
 	searchTerm: string;
+	signedIn: boolean;
 }
 
 const styles = (theme: Theme) =>
@@ -37,6 +39,7 @@ export class App extends React.PureComponent<AppProps, AppState> {
 			// cardNames: [],
 			hasError: false,
 			searchTerm: '',
+			signedIn: false,
 		}
 
 		this.loadNewCards = this.loadNewCards.bind(this);
@@ -110,20 +113,28 @@ export class App extends React.PureComponent<AppProps, AppState> {
 
 				{/* App */}
 				<div className={classes.cardManager}>
-					<SearchBar
-						// searchSuggestions={this.state.cardNames}
-						submitSearch={this.submitSearch}
-						hasErrored={this.hasErrored}
-					/>
-					<CardGrid>
+					{this.state.signedIn &&
+						<>
+							<SearchBar
+								// searchSuggestions={this.state.cardNames}
+								submitSearch={this.submitSearch}
+								hasErrored={this.hasErrored}
+							/>
+							<CardGrid>
 
-						{this.state.cards}
+								{this.state.cards}
 
-						{this.state.hasError &&
-							<ErrorMessage />
-						}
+								{this.state.hasError &&
+									<ErrorMessage />
+								}
 
-					</CardGrid>
+							</CardGrid>
+						</>
+					}
+
+					{!this.state.signedIn &&
+						<SignInPage />
+					}
 				</div>
 			</>
 		);
