@@ -8,7 +8,8 @@ import SingleCard from './SingleCard/SingleCard';
 import TransformCard from './TransformCard/TransformCard';
 
 interface AppState {
-	cards: [];
+	cards: string[];
+	// cardNames: string[];
 	hasError: boolean;
 	searchTerm: string;
 }
@@ -33,6 +34,7 @@ export class App extends React.PureComponent<AppProps, AppState> {
 
 		this.state = {
 			cards: [],
+			// cardNames: [],
 			hasError: false,
 			searchTerm: '',
 		}
@@ -41,6 +43,18 @@ export class App extends React.PureComponent<AppProps, AppState> {
 		this.hasErrored = this.hasErrored.bind(this);
 		this.submitSearch = this.submitSearch.bind(this);
 	}
+
+	// componentWillMount() {
+	// 	fetch('https://api.scryfall.com/catalog/card-names')
+	// 	.then(response => response.json())
+	// 	.then(response => {
+	// 		this.setState({
+	// 			cardNames: response.data,
+	// 		}, () => {
+	// 			console.log(this.state.cardNames);
+	// 		});
+	// 	})
+	// }
 
 	private loadNewCards(newCards:[]) {
 		this.setState({
@@ -97,6 +111,7 @@ export class App extends React.PureComponent<AppProps, AppState> {
 				{/* App */}
 				<div className={classes.cardManager}>
 					<SearchBar
+						// searchSuggestions={this.state.cardNames}
 						submitSearch={this.submitSearch}
 						hasErrored={this.hasErrored}
 					/>

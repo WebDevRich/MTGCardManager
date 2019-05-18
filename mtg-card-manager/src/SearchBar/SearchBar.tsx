@@ -6,6 +6,7 @@ import PrimaryButton from '../PrimaryButton/PrimaryButton';
 import TextInput from '../TextInput/TextInput';
 
 export interface SearchBarProps {
+	// searchSuggestions: string[];
 	submitSearch(value:string):void;
 	hasErrored(hasErrored:boolean):void;
 }
@@ -82,7 +83,11 @@ export class SearchBar extends React.PureComponent<SearchBarProps, SearchBarStat
 			<div className={classes.searchBar}>
 				<form noValidate className={classes.searchForm} onSubmit={this.submitSearch}>
 					<div className={classes.search}>
-						<TextInput inputValue={this.searchTerm} placeholder='Search...' />
+						<TextInput
+							inputValue={this.searchTerm}
+							placeholder='Search...'
+							// searchSuggestions={this.props.searchSuggestions}
+						/>
 					</div>
 					<PrimaryButton>
 						<SearchIcon />
