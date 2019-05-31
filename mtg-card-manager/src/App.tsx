@@ -45,6 +45,7 @@ export class App extends React.PureComponent<AppProps, AppState> {
 		this.loadNewCards = this.loadNewCards.bind(this);
 		this.hasErrored = this.hasErrored.bind(this);
 		this.submitSearch = this.submitSearch.bind(this);
+		this.isSignedIn = this.isSignedIn.bind(this);
 	}
 
 	// componentWillMount() {
@@ -58,6 +59,12 @@ export class App extends React.PureComponent<AppProps, AppState> {
 	// 		});
 	// 	})
 	// }
+
+	private isSignedIn(success:boolean) {
+		this.setState({
+			signedIn: success
+		})
+	}
 
 	private loadNewCards(newCards:[]) {
 		this.setState({
@@ -133,7 +140,7 @@ export class App extends React.PureComponent<AppProps, AppState> {
 					}
 
 					{!this.state.signedIn &&
-						<SignInPage />
+						<SignInPage signedIn={this.isSignedIn} />
 					}
 				</div>
 			</>

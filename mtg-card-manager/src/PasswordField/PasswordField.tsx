@@ -1,22 +1,42 @@
 import * as React from 'react';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import Input from '@material-ui/core/Input';
 import { InputAdornment, IconButton } from '@material-ui/core';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 
-export interface PasswordFieldState {
-	password: string;
-  showPassword: boolean;
+export interface PasswordFieldProps {
+	onChange(value:string):void;
+	passwordError: boolean;
 }
 
-export class PasswordField extends React.PureComponent<{}, PasswordFieldState> {
-	constructor(props:any) {
+export interface PasswordFieldState {
+	password: string;
+	showPassword: boolean;
+	passwordValue: string;
+}
+
+export class PasswordField extends React.PureComponent<PasswordFieldProps, PasswordFieldState> {
+	constructor(props:PasswordFieldProps) {
 		super(props)
 
 		this.state = {
 			password: '',
 			showPassword: false,
+			passwordValue: '',
 		}
+
+		this.updatePasswordValue = this.updatePasswordValue.bind(this);
+	}
+
+	private updatePasswordValue(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+		const newPasswordValue = e.currentTarget.value;
+
+		this.setState({
+			passwordValue: newPasswordValue
+		}, () => {
+			this.props.onChange(this.state.passwordValue)
+		})
 	}
 
 	handleClickShowPassword = () => {
@@ -26,22 +46,29 @@ export class PasswordField extends React.PureComponent<{}, PasswordFieldState> {
 	public render() {
 
 		return(
-			<Input
-				name="password"
-				type={this.state.showPassword ? 'text' : 'password'}
-				id="password"
-				autoComplete="current-password"
-				endAdornment={
-					<InputAdornment position="end">
-						<IconButton
-							aria-label="Toggle password visibility"
-							onClick={this.handleClickShowPassword}
-						>
-							{this.state.showPassword ? <Visibility /> : <VisibilityOff />}
-						</IconButton>
-					</InputAdornment>
+			<>
+				<Input
+					name="password"
+					type={this.state.showPassword ? 'text' : 'password'}
+					id="password"
+					autoComplete="current-password"
+					onChange={this.updatePasswordValue}
+					endAdornment={
+						<InputAdornment position="end">
+							<IconButton
+								aria-label="Toggle password visibility"
+								onClick={this.handleClickShowPassword}
+							>
+								{this.state.showPassword ? <Visibility /> : <VisibilityOff />}
+							</IconButton>
+						</InputAdornment>
+					}
+				/>
+
+				{this.props.passwordError &&
+					<FormHelperText>Please enter a password longer than 6 characters</FormHelperText>
 				}
-			/>
+			</>
 		)
 	}
 }

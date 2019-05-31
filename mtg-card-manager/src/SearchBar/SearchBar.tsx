@@ -2,7 +2,7 @@ import * as React from 'react';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
-import PrimaryButton from '../PrimaryButton/PrimaryButton';
+import ButtonComponent from '../ButtonComponent/ButtonComponent';
 import TextInput from '../TextInput/TextInput';
 
 export interface SearchBarProps {
@@ -89,9 +89,9 @@ export class SearchBar extends React.PureComponent<SearchBarProps, SearchBarStat
 							// searchSuggestions={this.props.searchSuggestions}
 						/>
 					</div>
-					<PrimaryButton>
+					<ButtonComponent onClick={this.submitSearch} color='primary' type='submit' variant='contained'>
 						<SearchIcon />
-					</PrimaryButton>
+					</ButtonComponent>
 				</form>
 			</div>
 		);
