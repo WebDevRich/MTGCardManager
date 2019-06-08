@@ -42,22 +42,22 @@ const styles = (theme: Theme) =>
 		},
 	});
 
-export interface SignInPageProps extends WithStyles<typeof styles> {
+export interface SignInFormProps extends WithStyles<typeof styles> {
 	signedIn(success:boolean):void;
 }
 
-export interface SignInPageState {
+export interface SignInFormState {
 	emailError: boolean;
 	emailValue: string;
 	passwordError: boolean;
 	passwordValue: string;
-	register: boolean;
+	registering: boolean;
 	signedIn: boolean;
 }
 
-export class SignInPage extends React.PureComponent<SignInPageProps, SignInPageState> {
+export class SignInForm extends React.PureComponent<SignInFormProps, SignInFormState> {
 
-	constructor(props:SignInPageProps) {
+	constructor(props:SignInFormProps) {
 		super(props)
 
 		this.state = {
@@ -65,14 +65,14 @@ export class SignInPage extends React.PureComponent<SignInPageProps, SignInPageS
 			emailValue: '',
 			passwordError: false,
 			passwordValue: '',
-			register: false,
+			registering: false,
 			signedIn: false,
 		}
 
 		this.passwordValueUpdate = this.passwordValueUpdate.bind(this);
-		this.switchToRegister = this.switchToRegister.bind(this);
-		this.signInSubmit = this.signInSubmit.bind(this);
-		this.signInSubmitButton = this.signInSubmitButton.bind(this);
+		this.formSubmit = this.formSubmit.bind(this);
+		this.formSubmitButton = this.formSubmitButton.bind(this);
+		this.toggleRegistering = this.toggleRegistering.bind(this);
 		this.updateEmailValue = this.updateEmailValue.bind(this);
 	}
 
@@ -125,7 +125,7 @@ export class SignInPage extends React.PureComponent<SignInPageProps, SignInPageS
 		return isValid;
 	}
 
-	private signInSubmit() {
+	private formSubmit() {
 		if (this.validateEmail() && this.validatePassword()) {
 			this.setState({
 				signedIn: true,
@@ -135,15 +135,15 @@ export class SignInPage extends React.PureComponent<SignInPageProps, SignInPageS
 		}
 	}
 
-	private signInSubmitButton(e: React.MouseEvent<HTMLButtonElement>) {
+	private formSubmitButton(e: React.MouseEvent<HTMLButtonElement>) {
 		e.preventDefault();
-		this.signInSubmit();
+		this.formSubmit();
 	}
 
-	private switchToRegister() {
-		this.setState({
-			register: true,
-		});
+	private toggleRegistering() {
+		this.setState(prevState => ({
+			registering: !prevState.registering,
+		}));
 	}
 
 	public render() {
@@ -159,7 +159,7 @@ export class SignInPage extends React.PureComponent<SignInPageProps, SignInPageS
 					<Typography component="h1" variant="h5">
 						Sign in / Register
 					</Typography>
-					<form className={classes.form} onSubmit={this.signInSubmit}>
+					<form className={classes.form} onSubmit={this.formSubmit}>
 						<FormControl margin="normal" error={this.state.emailError} required fullWidth>
 							<InputLabel	htmlFor="email">Email Address</InputLabel>
 							<Input
@@ -177,9 +177,9 @@ export class SignInPage extends React.PureComponent<SignInPageProps, SignInPageS
 							<InputLabel htmlFor="password">Password</InputLabel>
 							<PasswordField passwordError={this.state.passwordError} onChange={this.passwordValueUpdate} />
 						</FormControl>
-						{!this.state.register &&
+						{!this.state.registering &&
 							<ButtonComponent
-								onClick={this.signInSubmitButton}
+								onClick={this.formSubmitButton}
 								fullWidth={true}
 								color='primary'
 								type='submit'
@@ -189,15 +189,17 @@ export class SignInPage extends React.PureComponent<SignInPageProps, SignInPageS
 							</ButtonComponent>
 						}
 					</form>
-					<ButtonComponent
-						onClick={!this.state.register ? this.switchToRegister : this.signInSubmit}
-						fullWidth={true}
-						color={this.state.register ? 'primary' : 'default'}
-						variant={this.state.register ? 'contained' : 'text'}
-						type='submit'
-					>
-						Register
-					</ButtonComponent>
+					{!this.state.registering &&
+						<ButtonComponent
+							onClick={this.toggleRegistering}
+							fullWidth={true}
+							color='default'
+							variant='text'
+							type='submit'
+						>
+							Don't have an account? Register...
+						</ButtonComponent>
+					}
 				</Paper>
 			</main>
 		)
@@ -205,4 +207,4 @@ export class SignInPage extends React.PureComponent<SignInPageProps, SignInPageS
 	}
 }
 
-	export default withStyles(styles)(SignInPage);
+	export default withStyles(styles)(SignInForm);

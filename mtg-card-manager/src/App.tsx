@@ -1,20 +1,9 @@
 import * as React from 'react';
+import { BrowserRouter as Router, Route } from "react-router-dom";
 import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import CardGrid from './CardGrid/CardGrid';
-import ErrorMessage from './ErrorMessage/ErrorMessage';
-import SearchBar from './SearchBar/SearchBar';
-import SignInPage from './SignInPage/SignInPage';
-import SingleCard from './SingleCard/SingleCard';
-import TransformCard from './TransformCard/TransformCard';
-
-interface AppState {
-	cards: string[];
-	// cardNames: string[];
-	hasError: boolean;
-	searchTerm: string;
-	signedIn: boolean;
-}
+import MainPage from './MainPage/MainPage';
+import SignInForm from './SignInForm/SignInForm';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -29,85 +18,8 @@ const styles = (theme: Theme) =>
 
 export interface AppProps extends WithStyles<typeof styles> {}
 
-export class App extends React.PureComponent<AppProps, AppState> {
+export class App extends React.PureComponent<AppProps> {
 
-	constructor(props:any) {
-		super(props);
-
-		this.state = {
-			cards: [],
-			// cardNames: [],
-			hasError: false,
-			searchTerm: '',
-			signedIn: false,
-		}
-
-		this.loadNewCards = this.loadNewCards.bind(this);
-		this.hasErrored = this.hasErrored.bind(this);
-		this.submitSearch = this.submitSearch.bind(this);
-		this.isSignedIn = this.isSignedIn.bind(this);
-	}
-
-	// componentWillMount() {
-	// 	fetch('https://api.scryfall.com/catalog/card-names')
-	// 	.then(response => response.json())
-	// 	.then(response => {
-	// 		this.setState({
-	// 			cardNames: response.data,
-	// 		}, () => {
-	// 			console.log(this.state.cardNames);
-	// 		});
-	// 	})
-	// }
-
-	private isSignedIn(success:boolean) {
-		this.setState({
-			signedIn: success
-		})
-	}
-
-	private loadNewCards(newCards:[]) {
-		this.setState({
-			cards: newCards,
-		});
-	}
-
-	private hasErrored(hasError:boolean) {
-		this.setState({
-			hasError,
-		});
-	}
-
-	private submitSearch(searchTerm:string) {
-		fetch(`https://api.scryfall.com/cards/search?order=released&q=${searchTerm}`)
-			.then(response => response.json())
-			.then(response => {
-				let cards = response.data.map((cardItem:any, index:number) => {
-					return cardItem.image_uris ? (
-						<SingleCard key={index} alt={cardItem.name} src={cardItem.image_uris.border_crop} />
-					) : (
-						<TransformCard
-							faceOneImage={cardItem.card_faces[0].image_uris.border_crop}
-							faceOneName={cardItem.card_faces[0].name}
-							faceTwoImage={cardItem.card_faces[1].image_uris.border_crop}
-							faceTwoName={cardItem.card_faces[1].name}
-							key={index}
-						/>
-					);
-				})
-				this.setState({
-					cards: cards,
-					hasError: false,
-				});
-			})
-			.catch(error => {
-				this.setState({
-					cards: [],
-					hasError: true,
-				});
-				console.log(error)
-			})
-	}
 
 	public render() {
 
@@ -119,30 +31,12 @@ export class App extends React.PureComponent<AppProps, AppState> {
 				<CssBaseline />
 
 				{/* App */}
-				<div className={classes.cardManager}>
-					{this.state.signedIn &&
-						<>
-							<SearchBar
-								// searchSuggestions={this.state.cardNames}
-								submitSearch={this.submitSearch}
-								hasErrored={this.hasErrored}
-							/>
-							<CardGrid>
-
-								{this.state.cards}
-
-								{this.state.hasError &&
-									<ErrorMessage />
-								}
-
-							</CardGrid>
-						</>
-					}
-
-					{!this.state.signedIn &&
-						<SignInPage signedIn={this.isSignedIn} />
-					}
-				</div>
+				<Router>
+					<div className={classes.cardManager}>
+						<Route exact path="/" component={MainPage} />
+						<Route exact path="/signin" component={SignInForm} />
+					</div>
+				</Router>
 			</>
 		);
 	}
