@@ -51,7 +51,7 @@ export interface SignInFormState {
 	emailValue: string;
 	passwordError: boolean;
 	passwordValue: string;
-	registering: boolean;
+	existingUser: boolean;
 	signedIn: boolean;
 }
 
@@ -65,14 +65,14 @@ export class SignInForm extends React.PureComponent<SignInFormProps, SignInFormS
 			emailValue: '',
 			passwordError: false,
 			passwordValue: '',
-			registering: false,
+			existingUser: false,
 			signedIn: false,
 		}
 
 		this.passwordValueUpdate = this.passwordValueUpdate.bind(this);
 		this.formSubmit = this.formSubmit.bind(this);
 		this.formSubmitButton = this.formSubmitButton.bind(this);
-		this.toggleRegistering = this.toggleRegistering.bind(this);
+		this.toggleExistingUser = this.toggleExistingUser.bind(this);
 		this.updateEmailValue = this.updateEmailValue.bind(this);
 	}
 
@@ -140,9 +140,9 @@ export class SignInForm extends React.PureComponent<SignInFormProps, SignInFormS
 		this.formSubmit();
 	}
 
-	private toggleRegistering() {
+	private toggleExistingUser() {
 		this.setState(prevState => ({
-			registering: !prevState.registering,
+			existingUser: !prevState.existingUser,
 		}));
 	}
 
@@ -177,29 +177,25 @@ export class SignInForm extends React.PureComponent<SignInFormProps, SignInFormS
 							<InputLabel htmlFor="password">Password</InputLabel>
 							<PasswordField passwordError={this.state.passwordError} onChange={this.passwordValueUpdate} />
 						</FormControl>
-						{!this.state.registering &&
-							<ButtonComponent
-								onClick={this.formSubmitButton}
-								fullWidth={true}
-								color='primary'
-								type='submit'
-								variant='contained'
-							>
-								Sign In
-							</ButtonComponent>
-						}
-					</form>
-					{!this.state.registering &&
 						<ButtonComponent
-							onClick={this.toggleRegistering}
+							onClick={this.formSubmitButton}
 							fullWidth={true}
-							color='default'
-							variant='text'
+							color='primary'
 							type='submit'
+							variant='contained'
 						>
-							Don't have an account? Register...
+							{this.state.existingUser ? 'Sign Register' : 'Sign In'}
 						</ButtonComponent>
-					}
+					</form>
+					<ButtonComponent
+					onClick={this.toggleExistingUser}
+					fullWidth={true}
+					color='default'
+					variant='text'
+					type='submit'
+					>
+						{!this.state.existingUser ? 'Already have an account? Sign In...' : 'New here? Register...'}
+					</ButtonComponent>
 				</Paper>
 			</main>
 		)
