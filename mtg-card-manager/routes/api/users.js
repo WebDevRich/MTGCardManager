@@ -15,7 +15,7 @@ const User = require("../../models/user");
 // @desc Register user
 // @access Public
 router.post("/register", (req, res) => {
-  // Form validation
+	// Form validation
 	const { errors, isValid } = validateRegisterInput(req.body);
 
 	// Check validation
@@ -77,8 +77,7 @@ router.post("/login", (req, res) => {
 				// User matched
 				// Create JWT Payload
 				const payload = {
-					id: user.id,
-					name: user.name
+					id: user.id
 				};
 
 				// Sign token
