@@ -7,17 +7,16 @@ import {
   USER_LOADING
 } from "./types";
 // Register User
-export const registerUser = (userData:any) => {
+export const registerUser = (userData:any, callBack:any) => {
   axios
     .post("/api/users/register", userData)
 		.then(res => {
 			window.location.assign('./');
-			return 'noError'
+			callBack(res);
 		}) // re-direct to login on successful register
 		// .then(res => console.log('hello'))
 		.catch(err => {
-			console.log('err');
-			return 'someError'
+			callBack(err.response);
 		}
 		// dispatch({
 			//   type: GET_ERRORS,

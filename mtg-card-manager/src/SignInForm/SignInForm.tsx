@@ -50,9 +50,10 @@ export interface SignInFormProps extends WithStyles<typeof styles> {
 export interface SignInFormState {
 	emailError: boolean;
 	emailValue: string;
+	existingUser: boolean;
 	passwordError: boolean;
 	passwordValue: string;
-	existingUser: boolean;
+	registerError: boolean;
 	signedIn: boolean;
 }
 
@@ -64,9 +65,10 @@ export class SignInForm extends React.PureComponent<SignInFormProps, SignInFormS
 		this.state = {
 			emailError: false,
 			emailValue: '',
+			existingUser: false,
 			passwordError: false,
 			passwordValue: '',
-			existingUser: false,
+			registerError: false,
 			signedIn: false,
 		}
 
@@ -75,6 +77,7 @@ export class SignInForm extends React.PureComponent<SignInFormProps, SignInFormS
 		this.formSubmitButton = this.formSubmitButton.bind(this);
 		this.toggleExistingUser = this.toggleExistingUser.bind(this);
 		this.updateEmailValue = this.updateEmailValue.bind(this);
+		this.handleResponse = this.handleResponse.bind(this);
 	}
 
 	private updateEmailValue(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
@@ -126,6 +129,17 @@ export class SignInForm extends React.PureComponent<SignInFormProps, SignInFormS
 		return isValid;
 	}
 
+	private handleResponse(respopnse:any) {
+		if(respopnse.status === 400) {
+			this.setState({
+				registerError: true,
+				existingUser: true,
+			})
+		} else if(respopnse.status !== 200) {
+			console.log('something went wrong')
+		}
+	}
+
 	private formSubmit() {
 		if (this.validateEmail() && this.validatePassword()) {
 			this.setState({
@@ -137,15 +151,22 @@ export class SignInForm extends React.PureComponent<SignInFormProps, SignInFormS
 						password: this.state.passwordValue,
 					};
 
-					console.log(registerUser(newUser));
+					registerUser(newUser,
+						(response:any) => {
+							this.handleResponse(response);
+						}
+					);
+
 				} else {
 					const userData = {
 						email: this.state.emailValue,
 						password: this.state.passwordValue,
 					};
 
-					loginUser(userData);
+					apiResponse = loginUser(userData);
 				}
+
+				console.log(apiResponse);
 			})
 		}
 	}
@@ -192,6 +213,9 @@ export class SignInForm extends React.PureComponent<SignInFormProps, SignInFormS
 							<InputLabel htmlFor="password">Password</InputLabel>
 							<PasswordField passwordError={this.state.passwordError} onChange={this.passwordValueUpdate} />
 						</FormControl>
+						{this.state.registerError &&
+							<FormHelperText>An account already exists with this email, please sign in.</FormHelperText>
+						}
 						<ButtonComponent
 							onClick={this.formSubmitButton}
 							fullWidth={true}
