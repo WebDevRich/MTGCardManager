@@ -11,7 +11,7 @@ import ButtonComponent from '../ButtonComponent/ButtonComponent';
 import PasswordField from '../PasswordField/PasswordField';
 import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import FormHelperText from '@material-ui/core/FormHelperText';
-import { registerUser } from "../actions/authActions";
+import { loginUser, registerUser } from "../actions/authActions";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -131,12 +131,21 @@ export class SignInForm extends React.PureComponent<SignInFormProps, SignInFormS
 			this.setState({
 				signedIn: true,
 			}, () => {
-				const newUser = {
-					email: this.state.emailValue,
-					password: this.state.passwordValue,
-				};
+				if(!this.state.existingUser) {
+					const newUser = {
+						email: this.state.emailValue,
+						password: this.state.passwordValue,
+					};
 
-				registerUser(newUser);
+					console.log(registerUser(newUser));
+				} else {
+					const userData = {
+						email: this.state.emailValue,
+						password: this.state.passwordValue,
+					};
+
+					loginUser(userData);
+				}
 			})
 		}
 	}
@@ -190,7 +199,7 @@ export class SignInForm extends React.PureComponent<SignInFormProps, SignInFormS
 							type='submit'
 							variant='contained'
 						>
-							{this.state.existingUser ? 'Sign Register' : 'Sign In'}
+							{this.state.existingUser ? 'Sign In' : 'Register'}
 						</ButtonComponent>
 					</form>
 					<ButtonComponent
