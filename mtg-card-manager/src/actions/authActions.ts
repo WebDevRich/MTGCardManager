@@ -1,8 +1,8 @@
 import axios from "axios";
 import setAuthToken from "../utils/setAuthToken";
-import jwt_decode from "jwt-decode";
+// import jwt_decode from "jwt-decode";
 import {
-  GET_ERRORS,
+  // GET_ERRORS,
   SET_CURRENT_USER,
   USER_LOADING
 } from "./types";
@@ -11,18 +11,22 @@ export const registerUser = (userData:any) => {
   axios
     .post("/api/users/register", userData)
 		.then(res => {
-			window.location.assign('./login');
+			window.location.assign('./');
+			return 'noError'
 		}) // re-direct to login on successful register
 		// .then(res => console.log('hello'))
-		.catch(err => console.log('error')
-      // dispatch({
-      //   type: GET_ERRORS,
+		.catch(err => {
+			console.log('err');
+			return 'someError'
+		}
+		// dispatch({
+			//   type: GET_ERRORS,
       //   payload: err.response.data
       // })
-    );
+		);
 };
 // Login - get user token
-export const loginUser = (userData:String[]) => (dispatch:any) => {
+export const loginUser = (userData:any) => {
   axios
     .post("/api/users/login", userData)
     .then(res => {
@@ -33,15 +37,16 @@ export const loginUser = (userData:String[]) => (dispatch:any) => {
       // Set token to Auth header
       setAuthToken(token);
       // Decode token to get user data
-      const decoded = jwt_decode(token);
+      // const decoded = jwt_decode(token);
       // Set current user
-      dispatch(setCurrentUser(decoded));
+			// dispatch(setCurrentUser(decoded));
+			window.location.assign('./');
     })
-    .catch(err =>
-      dispatch({
-        type: GET_ERRORS,
-        payload: err.response.data
-      })
+    .catch(err => console.log('error')
+      // dispatch({
+      //   type: GET_ERRORS,
+      //   payload: err.response.data
+      // })
     );
 };
 // Set logged in user
