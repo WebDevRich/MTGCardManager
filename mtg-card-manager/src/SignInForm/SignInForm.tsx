@@ -166,11 +166,6 @@ export class SignInForm extends React.PureComponent<SignInFormProps, SignInFormS
 					password: this.state.passwordValue,
 				};
 				if(!this.state.existingUser) {
-					// const newUser = {
-					// 	email: this.state.emailValue,
-					// 	password: this.state.passwordValue,
-					// };
-
 					registerUser(userData,
 						(response:any) => {
 							if(response.status !== 200) {
@@ -180,11 +175,6 @@ export class SignInForm extends React.PureComponent<SignInFormProps, SignInFormS
 					);
 
 				} else {
-					// const userData = {
-					// 	email: this.state.emailValue,
-					// 	password: this.state.passwordValue,
-					// };
-
 					loginUser(userData,
 						(response:any) => {
 							if(response.status !== 200) {

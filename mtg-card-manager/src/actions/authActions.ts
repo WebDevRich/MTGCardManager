@@ -17,12 +17,7 @@ export const registerUser = (userData:any, callBack:any) => {
 		})
 		.catch(err => {
 			callBack(err.response);
-		}
-		// dispatch({
-			//   type: GET_ERRORS,
-      //   payload: err.response.data
-      // })
-		);
+		});
 };
 // Login - get user token
 export const loginUser = (userData:any, callBack:any) => {
@@ -44,12 +39,7 @@ export const loginUser = (userData:any, callBack:any) => {
     })
     .catch(err => {
 			callBack(err.response);
-		}
-      // dispatch({
-      //   type: GET_ERRORS,
-      //   payload: err.response.data
-      // })
-    );
+		});
 };
 // Set logged in user
 export const setCurrentUser = (decoded:any) => {
