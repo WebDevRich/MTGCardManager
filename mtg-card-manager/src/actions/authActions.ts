@@ -9,12 +9,12 @@ import {
 // Register User
 export const registerUser = (userData:any, callBack:any) => {
   axios
-    .post("/api/users/register", userData)
+		.post("/api/users/register", userData)
+		// re-direct to login on successful register
 		.then(res => {
 			window.location.assign('./');
 			callBack(res);
-		}) // re-direct to login on successful register
-		// .then(res => console.log('hello'))
+		})
 		.catch(err => {
 			callBack(err.response);
 		}
@@ -25,7 +25,7 @@ export const registerUser = (userData:any, callBack:any) => {
 		);
 };
 // Login - get user token
-export const loginUser = (userData:any) => {
+export const loginUser = (userData:any, callBack:any) => {
   axios
     .post("/api/users/login", userData)
     .then(res => {
@@ -40,8 +40,11 @@ export const loginUser = (userData:any) => {
       // Set current user
 			// dispatch(setCurrentUser(decoded));
 			window.location.assign('./');
+			callBack(res);
     })
-    .catch(err => console.log('error')
+    .catch(err => {
+			callBack(err.response);
+		}
       // dispatch({
       //   type: GET_ERRORS,
       //   payload: err.response.data

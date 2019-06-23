@@ -53,7 +53,7 @@ export interface SignInFormState {
 	existingUser: boolean;
 	passwordError: boolean;
 	passwordValue: string;
-	registerError: boolean;
+	submitError: boolean;
 	signedIn: boolean;
 }
 
@@ -68,7 +68,7 @@ export class SignInForm extends React.PureComponent<SignInFormProps, SignInFormS
 			existingUser: false,
 			passwordError: false,
 			passwordValue: '',
-			registerError: false,
+			submitError: false,
 			signedIn: false,
 		}
 
@@ -77,8 +77,10 @@ export class SignInForm extends React.PureComponent<SignInFormProps, SignInFormS
 		this.formSubmitButton = this.formSubmitButton.bind(this);
 		this.toggleExistingUser = this.toggleExistingUser.bind(this);
 		this.updateEmailValue = this.updateEmailValue.bind(this);
-		this.handleResponse = this.handleResponse.bind(this);
+		this.handleErrorResponse = this.handleErrorResponse.bind(this);
 	}
+
+	private errorMessage = '';
 
 	private updateEmailValue(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
 		const newEmailValue = e.currentTarget.value;
@@ -129,14 +131,28 @@ export class SignInForm extends React.PureComponent<SignInFormProps, SignInFormS
 		return isValid;
 	}
 
-	private handleResponse(respopnse:any) {
-		if(respopnse.status === 400) {
+	private handleErrorResponse(response:any) {
+		console.log(response);
+		if(response.data.email === 'Email already exists') {
+			console.log(response.data.email);
 			this.setState({
-				registerError: true,
+				submitError: true,
 				existingUser: true,
-			})
-		} else if(respopnse.status !== 200) {
-			console.log('something went wrong')
+			}, () => {
+				this.errorMessage = 'An account already exists with this email, please sign in.';
+			});
+		} else if(response.data.emailnotfound || response.data.passwordincorrect) {
+			this.setState({
+				submitError: true,
+			}, () => {
+				this.errorMessage = 'Either the password or email is incorrect';
+			});
+		} else {
+			this.setState({
+				submitError: true,
+			}, () => {
+				this.errorMessage = 'Sorry, somethging went wrong. Please try again';
+			});
 		}
 	}
 
@@ -145,28 +161,38 @@ export class SignInForm extends React.PureComponent<SignInFormProps, SignInFormS
 			this.setState({
 				signedIn: true,
 			}, () => {
+				const userData = {
+					email: this.state.emailValue,
+					password: this.state.passwordValue,
+				};
 				if(!this.state.existingUser) {
-					const newUser = {
-						email: this.state.emailValue,
-						password: this.state.passwordValue,
-					};
+					// const newUser = {
+					// 	email: this.state.emailValue,
+					// 	password: this.state.passwordValue,
+					// };
 
-					registerUser(newUser,
+					registerUser(userData,
 						(response:any) => {
-							this.handleResponse(response);
+							if(response.status !== 200) {
+								this.handleErrorResponse(response);
+							}
 						}
 					);
 
 				} else {
-					const userData = {
-						email: this.state.emailValue,
-						password: this.state.passwordValue,
-					};
+					// const userData = {
+					// 	email: this.state.emailValue,
+					// 	password: this.state.passwordValue,
+					// };
 
-					apiResponse = loginUser(userData);
+					loginUser(userData,
+						(response:any) => {
+							if(response.status !== 200) {
+								this.handleErrorResponse(response);
+							}
+						}
+					);
 				}
-
-				console.log(apiResponse);
 			})
 		}
 	}
@@ -213,9 +239,6 @@ export class SignInForm extends React.PureComponent<SignInFormProps, SignInFormS
 							<InputLabel htmlFor="password">Password</InputLabel>
 							<PasswordField passwordError={this.state.passwordError} onChange={this.passwordValueUpdate} />
 						</FormControl>
-						{this.state.registerError &&
-							<FormHelperText>An account already exists with this email, please sign in.</FormHelperText>
-						}
 						<ButtonComponent
 							onClick={this.formSubmitButton}
 							fullWidth={true}
@@ -225,6 +248,9 @@ export class SignInForm extends React.PureComponent<SignInFormProps, SignInFormS
 						>
 							{this.state.existingUser ? 'Sign In' : 'Register'}
 						</ButtonComponent>
+						{this.state.submitError &&
+							<FormHelperText error>An account already exists with this email, please sign in.</FormHelperText>
+						}
 					</form>
 					<ButtonComponent
 					onClick={this.toggleExistingUser}
