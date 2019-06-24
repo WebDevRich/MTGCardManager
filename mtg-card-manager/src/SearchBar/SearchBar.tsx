@@ -1,6 +1,9 @@
 import * as React from 'react';
-import { fade } from '@material-ui/core/styles/colorManipulator';
+import clsx from 'clsx';
+import { AppBar, Toolbar, IconButton } from '@material-ui/core';
 import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import MenuIcon from '@material-ui/icons/Menu';
+import { fade } from '@material-ui/core/styles/colorManipulator';
 import SearchIcon from '@material-ui/icons/Search';
 import ButtonComponent from '../ButtonComponent/ButtonComponent';
 import TextInput from '../TextInput/TextInput';
@@ -16,6 +19,8 @@ export interface SearchBarState {
 	cards: [];
 	error: boolean;
 }
+
+const drawerWidth = 240;
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -45,6 +50,26 @@ const styles = (theme: Theme) =>
 		searchForm: {
 			display: 'flex;'
 		},
+		appBar: {
+      transition: theme.transitions.create(['margin', 'width'], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+      }),
+    },
+    appBarShift: {
+      width: `calc(100% - ${drawerWidth}px)`,
+      marginLeft: drawerWidth,
+      transition: theme.transitions.create(['margin', 'width'], {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+		},
+		menuButton: {
+      marginRight: theme.spacing.unit * 2,
+    },
+    hide: {
+      display: 'none',
+    },
 	});
 
 export interface SearchBarProps extends WithStyles<typeof styles> {}
@@ -79,20 +104,44 @@ export class SearchBar extends React.PureComponent<SearchBarProps, SearchBarStat
 
 		const { classes } = this.props;
 
+		const [open, setOpen] = React.useState(false);
+
+		function handleDrawerOpen() {
+			setOpen(true);
+		}
+
 		return (
 			<div className={classes.searchBar}>
-				<form noValidate className={classes.searchForm} onSubmit={this.submitSearch}>
-					<div className={classes.search}>
-						<TextInput
-							inputValue={this.searchTerm}
-							placeholder='Search...'
-							// searchSuggestions={this.props.searchSuggestions}
-						/>
-					</div>
-					<ButtonComponent onClick={this.submitSearch} color='primary' type='submit' variant='contained'>
-						<SearchIcon />
-					</ButtonComponent>
-				</form>
+				<AppBar
+					position="fixed"
+					className={clsx(classes.appBar, {
+						[classes.appBarShift]: open,
+					})}
+				>
+					<Toolbar>
+						<IconButton
+							color="inherit"
+							aria-label="Open drawer"
+							onClick={handleDrawerOpen}
+							// edge="start"
+							className={clsx(classes.menuButton, open && classes.hide)}
+						>
+							<MenuIcon />
+						</IconButton>
+					</Toolbar>
+					<form noValidate className={classes.searchForm} onSubmit={this.submitSearch}>
+						<div className={classes.search}>
+							<TextInput
+								inputValue={this.searchTerm}
+								placeholder='Search...'
+								// searchSuggestions={this.props.searchSuggestions}
+							/>
+						</div>
+						<ButtonComponent onClick={this.submitSearch} color='primary' type='submit' variant='contained'>
+							<SearchIcon />
+						</ButtonComponent>
+					</form>
+				</AppBar>
 			</div>
 		);
 	}

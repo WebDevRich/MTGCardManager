@@ -1,9 +1,34 @@
 import * as React from 'react';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import CardGrid from '../CardGrid/CardGrid';
 import ErrorMessage from '../ErrorMessage/ErrorMessage';
 import SearchBar from '../SearchBar/SearchBar';
 import SingleCard from '../SingleCard/SingleCard';
 import TransformCard from '../TransformCard/TransformCard';
+import { Drawer, IconButton, Divider, List, ListItem, ListItemText } from '@material-ui/core';
+import { theme } from '../theme';
+
+const drawerWidth = 240;
+
+const styles = (theme: Theme) =>
+  createStyles({
+		drawer: {
+      width: drawerWidth,
+      flexShrink: 0,
+    },
+    drawerPaper: {
+      width: drawerWidth,
+    },
+    drawerHeader: {
+      display: 'flex',
+      alignItems: 'center',
+      padding: '0 8px',
+      ...theme.mixins.toolbar,
+      justifyContent: 'flex-end',
+    },
+	});
 
 interface MainPageState {
 	cards: string[];
@@ -12,9 +37,11 @@ interface MainPageState {
 	searchTerm: string;
 }
 
-export class MainPage extends React.PureComponent<{}, MainPageState> {
+export interface MainPageProps extends WithStyles<typeof styles> {}
 
-	constructor(props:any) {
+export class MainPage extends React.PureComponent<MainPageProps, MainPageState> {
+
+	constructor(props:MainPageProps) {
 		super(props);
 
 		this.state = {
@@ -86,6 +113,14 @@ export class MainPage extends React.PureComponent<{}, MainPageState> {
 
 	public render() {
 
+		const { classes } = this.props;
+
+		const [open, setOpen] = React.useState(false);
+
+		function handleDrawerClose() {
+			setOpen(false);
+		}
+
 		return (
 			<>
 				<SearchBar
@@ -93,6 +128,28 @@ export class MainPage extends React.PureComponent<{}, MainPageState> {
 					submitSearch={this.submitSearch}
 					hasErrored={this.hasErrored}
 				/>
+				<Drawer
+					className={classes.drawer}
+					variant="persistent"
+					anchor="left"
+					open={open}
+					classes={{
+						paper: classes.drawerPaper,
+					}}
+				>
+					<div className={classes.drawerHeader}>
+						<IconButton onClick={handleDrawerClose}>
+							{theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+						</IconButton>
+					</div>
+					<Divider />
+					<List>
+						<ListItem button>
+							<ListItemText primary='Library' />
+						</ListItem>
+					</List>
+				</Drawer>
+
 				<CardGrid>
 
 					{this.state.cards}
@@ -107,4 +164,4 @@ export class MainPage extends React.PureComponent<{}, MainPageState> {
 	}
 }
 
-export default MainPage;
+export default withStyles(styles)(MainPage);
