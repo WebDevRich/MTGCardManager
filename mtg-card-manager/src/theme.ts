@@ -3,8 +3,8 @@ import { blueGrey, cyan } from '@material-ui/core/colors';
 
 export const theme = createMuiTheme({
 	typography: {
-    useNextVariants: true,
-  },
+		useNextVariants: true,
+	},
 	overrides: {
 		MuiCssBaseline: {
 			'@global': {
@@ -13,8 +13,8 @@ export const theme = createMuiTheme({
 				},
 				img: {
 					display: 'inherit',
-				}
-			}
+				},
+			},
 		},
 	},
 	palette: {
@@ -30,5 +30,5 @@ export const theme = createMuiTheme({
 			dark: blueGrey[900],
 			contrastText: blueGrey[50],
 		},
-	}
-})
+	},
+});

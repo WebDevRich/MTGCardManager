@@ -1,34 +1,34 @@
-import * as React from 'react';
+import { Divider, Drawer, IconButton, List, ListItem, ListItemText } from '@material-ui/core';
+import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import * as React from 'react';
 import CardGrid from '../CardGrid/CardGrid';
 import ErrorMessage from '../ErrorMessage/ErrorMessage';
 import SearchBar from '../SearchBar/SearchBar';
 import SingleCard from '../SingleCard/SingleCard';
-import TransformCard from '../TransformCard/TransformCard';
-import { Drawer, IconButton, Divider, List, ListItem, ListItemText } from '@material-ui/core';
 import { theme } from '../theme';
+import TransformCard from '../TransformCard/TransformCard';
 
 const drawerWidth = 240;
 
-const styles = (theme: Theme) =>
-  createStyles({
-		drawer: {
-      width: drawerWidth,
-      flexShrink: 0,
-    },
-    drawerPaper: {
-      width: drawerWidth,
-    },
-    drawerHeader: {
-      display: 'flex',
-      alignItems: 'center',
-      padding: '0 8px',
-      ...theme.mixins.toolbar,
-      justifyContent: 'flex-end',
-    },
-	});
+const styles = (uiTheme:Theme) =>
+	createStyles({
+	drawer: {
+		width: drawerWidth,
+		flexShrink: 0,
+	},
+	drawerPaper: {
+		width: drawerWidth,
+	},
+	drawerHeader: {
+		display: 'flex',
+		alignItems: 'center',
+		padding: '0 8px',
+		...uiTheme.mixins.toolbar,
+		justifyContent: 'flex-end',
+	},
+});
 
 interface MainPageState {
 	cards: string[];
@@ -49,7 +49,7 @@ export class MainPage extends React.PureComponent<MainPageProps, MainPageState> 
 			// cardNames: [],
 			hasError: false,
 			searchTerm: '',
-		}
+		};
 
 		this.loadNewCards = this.loadNewCards.bind(this);
 		this.hasErrored = this.hasErrored.bind(this);
@@ -84,7 +84,7 @@ export class MainPage extends React.PureComponent<MainPageProps, MainPageState> 
 		fetch(`https://api.scryfall.com/cards/search?order=released&q=${searchTerm}`)
 			.then(response => response.json())
 			.then(response => {
-				let cards = response.data.map((cardItem:any, index:number) => {
+				const cards = response.data.map((cardItem:any, index:number) => {
 					return cardItem.image_uris ? (
 						<SingleCard key={index} alt={cardItem.name} src={cardItem.image_uris.border_crop} />
 					) : (
@@ -96,9 +96,9 @@ export class MainPage extends React.PureComponent<MainPageProps, MainPageState> 
 							key={index}
 						/>
 					);
-				})
+				});
 				this.setState({
-					cards: cards,
+					cards,
 					hasError: false,
 				});
 			})
@@ -107,8 +107,8 @@ export class MainPage extends React.PureComponent<MainPageProps, MainPageState> 
 					cards: [],
 					hasError: true,
 				});
-				console.log(error)
-			})
+				console.log(error);
+			});
 	}
 
 	public render() {
@@ -130,8 +130,8 @@ export class MainPage extends React.PureComponent<MainPageProps, MainPageState> 
 				/>
 				<Drawer
 					className={classes.drawer}
-					variant="persistent"
-					anchor="left"
+					variant='persistent'
+					anchor='left'
 					open={open}
 					classes={{
 						paper: classes.drawerPaper,
@@ -144,7 +144,7 @@ export class MainPage extends React.PureComponent<MainPageProps, MainPageState> 
 					</div>
 					<Divider />
 					<List>
-						<ListItem button>
+						<ListItem button={true}>
 							<ListItemText primary='Library' />
 						</ListItem>
 					</List>

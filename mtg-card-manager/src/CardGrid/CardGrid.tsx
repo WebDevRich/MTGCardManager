@@ -1,19 +1,19 @@
+import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
-import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
-const styles = (theme: Theme) =>
-  createStyles({
+const styles = () =>
+	createStyles({
 		cardGrid: {
 			display: 'grid',
 			gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
 			gridGap: '20px',
 			padding: '0 20px 20px',
-		}
+		},
 	});
 
 export interface CardGridProps extends WithStyles<typeof styles> {}
 
-export class cardGrid extends React.PureComponent<CardGridProps> {
+export class CardGrid extends React.PureComponent<CardGridProps> {
 
 	public render() {
 
@@ -27,4 +27,4 @@ export class cardGrid extends React.PureComponent<CardGridProps> {
 	}
 }
 
-export default withStyles(styles)(cardGrid);
+export default withStyles(styles)(CardGrid);

@@ -1,16 +1,16 @@
+import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
-import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
-const styles = (theme: Theme) =>
-  createStyles({
+const styles = () =>
+	createStyles({
 		errorMessage: {
 			gridColumn: '1 / -1',
-		}
+		},
 	});
 
-export interface ErrorMessage extends WithStyles<typeof styles> {}
+export interface ErrorMessageProps extends WithStyles<typeof styles> {}
 
-export class errorMessage extends React.PureComponent<ErrorMessage> {
+export class ErrorMessage extends React.PureComponent<ErrorMessageProps> {
 
 	public render() {
 
@@ -24,4 +24,4 @@ export class errorMessage extends React.PureComponent<ErrorMessage> {
 	}
 }
 
-export default withStyles(styles)(errorMessage);
+export default withStyles(styles)(ErrorMessage);

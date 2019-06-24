@@ -1,9 +1,9 @@
+import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
-import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
-const styles = (theme: Theme) =>
-  createStyles({
-    suggestionsList: {
+const styles = () =>
+	createStyles({
+		suggestionsList: {
 			position: 'absolute',
 			listStyle: 'none',
 			margin: 0,
@@ -13,7 +13,7 @@ const styles = (theme: Theme) =>
 			padding: 5,
 		},
 		activeSuggestions: {
-      backgroundColor: 'blue',
+			backgroundColor: 'blue',
 		},
 	});
 
@@ -29,26 +29,27 @@ export interface SearchSuggestionsState {
 
 export class SearchSuggestions extends React.PureComponent<SearchSuggestionsProps, SearchSuggestionsState> {
 
-	constructor(props: SearchSuggestionsProps) {
-		super(props)
+	constructor(props:SearchSuggestionsProps) {
+		super(props);
 
 		this.state = {
 			activeSuggestion: 0,
 			inputValue: '',
-		}
+		};
 	}
 
 	// Event fired when the user clicks on a suggestion
-  private suggestionSelected(value:string) {
+	private suggestionSelected(e:React.MouseEvent<HTMLLIElement>) {
+		const value = e.currentTarget.innerText;
 		console.log(value);
-    // Update the user input and reset the rest of the state
-    this.setState({
-      activeSuggestion: 0,
-      // userInput: value,
-    }, () => {
+		// Update the user input and reset the rest of the state
+		this.setState({
+			activeSuggestion: 0,
+			// userInput: value,
+		}, () => {
 			this.props.inputValue(this.state.inputValue);
 		});
-	};
+	}
 
 	public render() {
 
@@ -68,14 +69,14 @@ export class SearchSuggestions extends React.PureComponent<SearchSuggestionsProp
 						<li
 							className={`${suggestion} ${className}`}
 							key={suggestion}
-							onClick={event => this.suggestionSelected(event.currentTarget.innerText)}
+							onClick={this.suggestionSelected}
 						>
 							{suggestion}
 						</li>
 					);
 				})}
 			</ul>
-		)
+		);
 	}
 }
 

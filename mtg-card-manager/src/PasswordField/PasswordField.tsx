@@ -1,9 +1,9 @@
-import * as React from 'react';
+import { IconButton, InputAdornment } from '@material-ui/core';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Input from '@material-ui/core/Input';
-import { InputAdornment, IconButton } from '@material-ui/core';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import * as React from 'react';
 
 export interface PasswordFieldProps {
 	onChange(value:string):void;
@@ -18,45 +18,45 @@ export interface PasswordFieldState {
 
 export class PasswordField extends React.PureComponent<PasswordFieldProps, PasswordFieldState> {
 	constructor(props:PasswordFieldProps) {
-		super(props)
+		super(props);
 
 		this.state = {
 			password: '',
 			showPassword: false,
 			passwordValue: '',
-		}
+		};
 
 		this.updatePasswordValue = this.updatePasswordValue.bind(this);
 	}
 
-	private updatePasswordValue(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+	private updatePasswordValue(e:React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
 		const newPasswordValue = e.currentTarget.value;
 
 		this.setState({
-			passwordValue: newPasswordValue
+			passwordValue: newPasswordValue,
 		}, () => {
-			this.props.onChange(this.state.passwordValue)
-		})
+			this.props.onChange(this.state.passwordValue);
+		});
 	}
 
-	handleClickShowPassword = () => {
-    this.setState(state => ({ showPassword: !state.showPassword }));
-  };
+	private handleClickShowPassword = () => {
+		this.setState(state => ({ showPassword: !state.showPassword }));
+	}
 
 	public render() {
 
 		return(
 			<>
 				<Input
-					name="password"
+					name='password'
 					type={this.state.showPassword ? 'text' : 'password'}
-					id="password"
-					autoComplete="current-password"
+					id='password'
+					autoComplete='current-password'
 					onChange={this.updatePasswordValue}
 					endAdornment={
-						<InputAdornment position="end">
+						<InputAdornment position='end'>
 							<IconButton
-								aria-label="Toggle password visibility"
+								aria-label='Toggle password visibility'
 								onClick={this.handleClickShowPassword}
 							>
 								{this.state.showPassword ? <Visibility /> : <VisibilityOff />}
@@ -69,7 +69,7 @@ export class PasswordField extends React.PureComponent<PasswordFieldProps, Passw
 					<FormHelperText>Please enter a password longer than 6 characters</FormHelperText>
 				}
 			</>
-		)
+		);
 	}
 }
 

@@ -1,8 +1,8 @@
+import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
-import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import SingleCard from '../SingleCard/SingleCard';
 
-const styles = (theme: Theme) =>
+const styles = () =>
 createStyles({
 	transformCard: {
 		perspective: 1000,
@@ -25,7 +25,7 @@ createStyles({
 	},
 	cardNotFlipped: {
 		transform: 'rotateY(180deg)',
-	}
+	},
 });
 
 export interface TransformCardProps extends WithStyles<typeof styles> {
@@ -47,14 +47,14 @@ export class TransformCard extends React.PureComponent<TransformCardProps, Trans
 
 		this.state = {
 			cardFlipped: false,
-		}
+		},
 
 		this.flipCard = this.flipCard.bind(this);
 	}
 
 	private flipCard() {
 		this.setState({
-			cardFlipped: !this.state.cardFlipped
+			cardFlipped: !this.state.cardFlipped,
 		});
 	}
 
@@ -76,7 +76,7 @@ export class TransformCard extends React.PureComponent<TransformCardProps, Trans
 					</div>
 				</div>
 			</>
-		)
+		);
 	}
 }
 

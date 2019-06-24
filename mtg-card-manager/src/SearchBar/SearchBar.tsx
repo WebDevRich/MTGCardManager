@@ -1,10 +1,10 @@
-import * as React from 'react';
-import clsx from 'clsx';
-import { AppBar, Toolbar, IconButton } from '@material-ui/core';
+import { AppBar, IconButton, Toolbar } from '@material-ui/core';
 import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import MenuIcon from '@material-ui/icons/Menu';
 import { fade } from '@material-ui/core/styles/colorManipulator';
+import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
+import clsx from 'clsx';
+import * as React from 'react';
 import ButtonComponent from '../ButtonComponent/ButtonComponent';
 import TextInput from '../TextInput/TextInput';
 
@@ -22,68 +22,68 @@ export interface SearchBarState {
 
 const drawerWidth = 240;
 
-const styles = (theme: Theme) =>
-  createStyles({
+const styles = (theme:Theme) =>
+	createStyles({
 		searchBar: {
 			gridColumn: '1 / -1',
 			padding: 20,
 			display: 'flex',
 			justifyContent: 'center',
 			backgroundColor: theme.palette.secondary.dark,
-			color: theme.palette.secondary.contrastText
+			color: theme.palette.secondary.contrastText,
 		},
-    search: {
-      position: 'relative',
-      borderRadius: theme.shape.borderRadius,
-      backgroundColor: fade(theme.palette.common.white, 0.15),
-      '&:hover': {
-        backgroundColor: fade(theme.palette.common.white, 0.25),
-      },
-			marginLeft: 0,
-			marginRight: theme.spacing.unit,
-      width: '100%',
-      [theme.breakpoints.up('sm')]: {
-        marginLeft: theme.spacing.unit,
-        width: 'auto',
-      },
+		search: {
+			position: 'relative',
+			borderRadius: theme.shape.borderRadius,
+			backgroundColor: fade(theme.palette.common.white, 0.15),
+			'&:hover': {
+			backgroundColor: fade(theme.palette.common.white, 0.25),
+			},
+				marginLeft: 0,
+				marginRight: theme.spacing.unit,
+			width: '100%',
+			[theme.breakpoints.up('sm')]: {
+			marginLeft: theme.spacing.unit,
+			width: 'auto',
+			},
+			},
+			searchForm: {
+				display: 'flex;',
+			},
+			appBar: {
+			transition: theme.transitions.create(['margin', 'width'], {
+			easing: theme.transitions.easing.sharp,
+			duration: theme.transitions.duration.leavingScreen,
+			}),
 		},
-		searchForm: {
-			display: 'flex;'
+		appBarShift: {
+			width: `calc(100% - ${drawerWidth}px)`,
+			marginLeft: drawerWidth,
+			transition: theme.transitions.create(['margin', 'width'], {
+			easing: theme.transitions.easing.easeOut,
+			duration: theme.transitions.duration.enteringScreen,
+			}),
+			},
+			menuButton: {
+			marginRight: theme.spacing.unit * 2,
 		},
-		appBar: {
-      transition: theme.transitions.create(['margin', 'width'], {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-      }),
-    },
-    appBarShift: {
-      width: `calc(100% - ${drawerWidth}px)`,
-      marginLeft: drawerWidth,
-      transition: theme.transitions.create(['margin', 'width'], {
-        easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
+		hide: {
+			display: 'none',
 		},
-		menuButton: {
-      marginRight: theme.spacing.unit * 2,
-    },
-    hide: {
-      display: 'none',
-    },
 	});
 
 export interface SearchBarProps extends WithStyles<typeof styles> {}
 
 export class SearchBar extends React.PureComponent<SearchBarProps, SearchBarState> {
 
-	constructor(props: SearchBarProps) {
-		super(props)
+	constructor(props:SearchBarProps) {
+		super(props);
 
 		this.state = {
 			searchTerm: '',
 			cards: [],
 			error: false,
-		}
+		};
 
 		this.searchTerm = this.searchTerm.bind(this);
 		this.submitSearch = this.submitSearch.bind(this);
@@ -91,11 +91,11 @@ export class SearchBar extends React.PureComponent<SearchBarProps, SearchBarStat
 
 	private searchTerm(value:any) {
 		this.setState({
-			searchTerm: value
+			searchTerm: value,
 		});
-	};
+	}
 
-	private submitSearch(e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>) {
+	private submitSearch(e:React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>) {
 		e.preventDefault();
 		this.props.submitSearch(this.state.searchTerm);
 	}
@@ -113,15 +113,15 @@ export class SearchBar extends React.PureComponent<SearchBarProps, SearchBarStat
 		return (
 			<div className={classes.searchBar}>
 				<AppBar
-					position="fixed"
+					position='fixed'
 					className={clsx(classes.appBar, {
 						[classes.appBarShift]: open,
 					})}
 				>
 					<Toolbar>
 						<IconButton
-							color="inherit"
-							aria-label="Open drawer"
+							color='inherit'
+							aria-label='Open drawer'
 							onClick={handleDrawerOpen}
 							// edge="start"
 							className={clsx(classes.menuButton, open && classes.hide)}
@@ -129,7 +129,7 @@ export class SearchBar extends React.PureComponent<SearchBarProps, SearchBarStat
 							<MenuIcon />
 						</IconButton>
 					</Toolbar>
-					<form noValidate className={classes.searchForm} onSubmit={this.submitSearch}>
+					<form noValidate={true} className={classes.searchForm} onSubmit={this.submitSearch}>
 						<div className={classes.search}>
 							<TextInput
 								inputValue={this.searchTerm}

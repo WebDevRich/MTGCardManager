@@ -1,20 +1,19 @@
-import * as React from 'react';
-// import { PropTypes.Color } from '@material-ui';
 import { Button, PropTypes } from '@material-ui/core';
-import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import { ButtonProps } from '@material-ui/core/Button';
+import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import * as React from 'react';
 
-const styles = (theme: Theme) =>
-  createStyles({
+const styles = (theme:Theme) =>
+	createStyles({
 		fullWidth: {
 			marginTop: theme.spacing.unit * 3,
-		}
-	})
+		},
+	});
 
 export interface ButtonComponentProps extends WithStyles<typeof styles> {
 	color?: PropTypes.Color;
 	fullWidth?: boolean;
-	onClick(e: React.MouseEvent<HTMLButtonElement>):void;
+	onClick(e:React.MouseEvent<HTMLButtonElement>):void;
 	type?: ButtonProps['type'];
 	variant?: ButtonProps['variant'];
 }
@@ -26,17 +25,17 @@ export interface ButtonComponentState {
 export class ButtonComponent extends React.PureComponent<ButtonComponentProps, ButtonComponentState> {
 
 	constructor(props:ButtonComponentProps) {
-		super(props)
+		super(props);
 
 		this.state = {
-			clicked: false
-		}
+			clicked: false,
+		};
 
-		this.buttonClicked = this.buttonClicked.bind(this)
+		this.buttonClicked = this.buttonClicked.bind(this);
 	}
 
-	private buttonClicked(e: React.MouseEvent<HTMLButtonElement>) {
-		this.props.onClick(e)
+	private buttonClicked(e:React.MouseEvent<HTMLButtonElement>) {
+		this.props.onClick(e);
 	}
 
 	public render() {
@@ -46,7 +45,7 @@ export class ButtonComponent extends React.PureComponent<ButtonComponentProps, B
 			color,
 			fullWidth,
 			type,
-			variant
+			variant,
 		} = this.props;
 
 		return(
@@ -60,7 +59,7 @@ export class ButtonComponent extends React.PureComponent<ButtonComponentProps, B
 			>
 				{this.props.children}
 			</Button>
-		)
+		);
 	}
 }
 

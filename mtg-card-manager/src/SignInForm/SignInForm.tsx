@@ -1,21 +1,21 @@
-import * as EmailValidator from 'email-validator';
-import * as React from 'react';
+import { FormControl } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
-import { FormControl } from '@material-ui/core';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Paper from '@material-ui/core/Paper';
+import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import * as EmailValidator from 'email-validator';
+import * as React from 'react';
+import { loginUser, registerUser } from '../actions/authActions';
 import ButtonComponent from '../ButtonComponent/ButtonComponent';
 import PasswordField from '../PasswordField/PasswordField';
-import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import { loginUser, registerUser } from "../actions/authActions";
 
-const styles = (theme: Theme) =>
-  createStyles({
-    main: {
+const styles = (theme:Theme) =>
+	createStyles({
+		main: {
 			width: 'auto',
 			display: 'block', // Fix IE 11 issue.
 			marginLeft: theme.spacing.unit * 3,
@@ -60,7 +60,7 @@ export interface SignInFormState {
 export class SignInForm extends React.PureComponent<SignInFormProps, SignInFormState> {
 
 	constructor(props:SignInFormProps) {
-		super(props)
+		super(props);
 
 		this.state = {
 			emailError: false,
@@ -70,7 +70,7 @@ export class SignInForm extends React.PureComponent<SignInFormProps, SignInFormS
 			passwordValue: '',
 			submitError: false,
 			signedIn: false,
-		}
+		};
 
 		this.passwordValueUpdate = this.passwordValueUpdate.bind(this);
 		this.formSubmit = this.formSubmit.bind(this);
@@ -82,33 +82,33 @@ export class SignInForm extends React.PureComponent<SignInFormProps, SignInFormS
 
 	private errorMessage = '';
 
-	private updateEmailValue(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+	private updateEmailValue(e:React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
 		const newEmailValue = e.currentTarget.value;
 		this.setState({
-			emailValue: newEmailValue
-		})
+			emailValue: newEmailValue,
+		});
 	}
 
 	private passwordValueUpdate(newPasswordValue:string) {
 		this.setState({
-			passwordValue: newPasswordValue
-		})
+			passwordValue: newPasswordValue,
+		});
 	}
 
 	// Validate email
 	private validateEmail() {
 		let isValid = false;
-		if (!EmailValidator.validate(this.state.emailValue)){
+		if (!EmailValidator.validate(this.state.emailValue)) {
 			isValid = false;
 			this.setState({
-				emailError: true
-			})
+				emailError: true,
+			});
 		} else {
 			isValid = true;
 			this.setState({
-				emailError: false
-			})
-		};
+				emailError: false,
+			});
+		}
 
 		return isValid;
 	}
@@ -116,24 +116,24 @@ export class SignInForm extends React.PureComponent<SignInFormProps, SignInFormS
 	// Validate password
 	private validatePassword() {
 		let isValid = false;
-		if (this.state.passwordValue.length < 6){
+		if (this.state.passwordValue.length < 6) {
 			isValid = false;
 			this.setState({
-				passwordError: true
-			})
+				passwordError: true,
+			});
 		} else {
 			isValid = true;
 			this.setState({
-				passwordError: false
-			})
-		};
+				passwordError: false,
+			});
+		}
 
 		return isValid;
 	}
 
 	private handleErrorResponse(response:any) {
 		console.log(response);
-		if(response.data.email === 'Email already exists') {
+		if (response.data.email === 'Email already exists') {
 			console.log(response.data.email);
 			this.setState({
 				submitError: true,
@@ -141,7 +141,7 @@ export class SignInForm extends React.PureComponent<SignInFormProps, SignInFormS
 			}, () => {
 				this.errorMessage = 'An account already exists with this email, please sign in.';
 			});
-		} else if(response.data.emailnotfound || response.data.passwordincorrect) {
+		} else if (response.data.emailnotfound || response.data.passwordincorrect) {
 			this.setState({
 				submitError: true,
 			}, () => {
@@ -165,29 +165,29 @@ export class SignInForm extends React.PureComponent<SignInFormProps, SignInFormS
 					email: this.state.emailValue,
 					password: this.state.passwordValue,
 				};
-				if(!this.state.existingUser) {
+				if (!this.state.existingUser) {
 					registerUser(userData,
 						(response:any) => {
-							if(response.status !== 200) {
+							if (response.status !== 200) {
 								this.handleErrorResponse(response);
 							}
-						}
+						},
 					);
 
 				} else {
 					loginUser(userData,
 						(response:any) => {
-							if(response.status !== 200) {
+							if (response.status !== 200) {
 								this.handleErrorResponse(response);
 							}
-						}
+						},
 					);
 				}
-			})
+			});
 		}
 	}
 
-	private formSubmitButton(e: React.MouseEvent<HTMLButtonElement>) {
+	private formSubmitButton(e:React.MouseEvent<HTMLButtonElement>) {
 		e.preventDefault();
 		this.formSubmit();
 	}
@@ -208,25 +208,25 @@ export class SignInForm extends React.PureComponent<SignInFormProps, SignInFormS
 					<Avatar className={classes.avatar}>
 						<LockOutlinedIcon />
 					</Avatar>
-					<Typography component="h1" variant="h5">
+					<Typography component='h1' variant='h5'>
 						Sign in / Register
 					</Typography>
 					<form className={classes.form} onSubmit={this.formSubmit}>
-						<FormControl margin="normal" error={this.state.emailError} required fullWidth>
-							<InputLabel	htmlFor="email">Email Address</InputLabel>
+						<FormControl margin='normal' error={this.state.emailError} required={true} fullWidth={true}>
+							<InputLabel	htmlFor='email'>Email Address</InputLabel>
 							<Input
-								id="email"
-								name="email"
-								autoComplete="email"
-								autoFocus
+								id='email'
+								name='email'
+								autoComplete='email'
+								autoFocus={true}
 								onChange={this.updateEmailValue}
 							/>
 							{this.state.emailError &&
 								<FormHelperText>Please enter a valid email</FormHelperText>
 							}
 						</FormControl>
-						<FormControl margin="normal" error={this.state.passwordError} required fullWidth>
-							<InputLabel htmlFor="password">Password</InputLabel>
+						<FormControl margin='normal' error={this.state.passwordError} required={true} fullWidth={true}>
+							<InputLabel htmlFor='password'>Password</InputLabel>
 							<PasswordField passwordError={this.state.passwordError} onChange={this.passwordValueUpdate} />
 						</FormControl>
 						<ButtonComponent
@@ -239,21 +239,21 @@ export class SignInForm extends React.PureComponent<SignInFormProps, SignInFormS
 							{this.state.existingUser ? 'Sign In' : 'Register'}
 						</ButtonComponent>
 						{this.state.submitError &&
-							<FormHelperText error>An account already exists with this email, please sign in.</FormHelperText>
+							<FormHelperText error={true}>An account already exists with this email, please sign in.</FormHelperText>
 						}
 					</form>
 					<ButtonComponent
-					onClick={this.toggleExistingUser}
-					fullWidth={true}
-					color='default'
-					variant='text'
-					type='submit'
+						onClick={this.toggleExistingUser}
+						fullWidth={true}
+						color='default'
+						variant='text'
+						type='submit'
 					>
 						{!this.state.existingUser ? 'Already have an account? Sign In...' : 'New here? Register...'}
 					</ButtonComponent>
 				</Paper>
 			</main>
-		)
+		);
 
 	}
 }

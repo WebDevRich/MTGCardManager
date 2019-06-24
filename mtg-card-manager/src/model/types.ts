@@ -8,13 +8,13 @@ export enum ButtonColor {
 	default = 'default',
 	inherit = 'inherit',
 	primary = 'primary',
-	secondary = 'secondary'
+	secondary = 'secondary',
 }
 
 export enum ButtonType {
 	button = 'button',
 	reset = 'reset',
-	submit = 'submit'
+	submit = 'submit',
 }
 
 export enum ButtonVariant {
@@ -24,5 +24,5 @@ export enum ButtonVariant {
 	fab = 'fab',
 	extendedFab = 'extendedFab',
 	flat = 'flat',
-	raised = 'raised'
+	raised = 'raised',
 }

@@ -1,8 +1,8 @@
+import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
-import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 
-const styles = (theme: Theme) =>
-  createStyles({
+const styles = () =>
+	createStyles({
 		singleCard: {
 			gridColumn: 'span 1',
 			borderRadius: 4,
@@ -11,8 +11,8 @@ const styles = (theme: Theme) =>
 			'& img': {
 				width: '100%',
 				height: 'auto',
-			}
-		}
+			},
+		},
 	});
 
 export interface SingleCardProps extends WithStyles<typeof styles> {
@@ -30,7 +30,7 @@ export class SingleCard extends React.PureComponent<SingleCardProps> {
 			<div className={classes.singleCard}>
 				<img src={this.props.src} alt={this.props.alt} />
 			</div>
-		)
+		);
 	}
 }
 

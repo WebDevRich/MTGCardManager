@@ -54,7 +54,7 @@
     "no-irregular-whitespace": true,
     "no-invalid-this": true,
     "no-magic-numbers": [
-      true
+      false
     ],
     "no-reference": true,
     "no-shadowed-variable": true,
