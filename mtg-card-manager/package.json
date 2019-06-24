@@ -12,9 +12,12 @@
     "@types/react-dom": "16.8.4",
     "@types/react-redux": "^7.1.0",
     "@types/react-router-dom": "^4.3.3",
+    "@typescript-eslint/eslint-plugin": "^1.10.2",
+    "@typescript-eslint/parser": "^1.10.2",
     "axios": "^0.19.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
+    "clsx": "^1.0.4",
     "concurrently": "^4.1.0",
     "cors": "^2.8.5",
     "email-validator": "^2.0.4",
@@ -35,6 +38,10 @@
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
     "typescript": "3.4.5",
+    "tslint": "^5.9.1",
+    "tslint-junit-formatter": "^5.1.0",
+    "tslint-react": "^3.4.0",
+    "tslint-webpack-plugin": "^1.0.0",
     "validator": "^11.0.0"
   },
   "main": "./backend/server.js",
@@ -63,6 +70,7 @@
   "proxy": "http://localhost:5000",
   "devDependencies": {
     "@types/react-autosuggest": "^9.3.8",
+    "eslint-plugin-react-hooks": "^1.6.0",
     "nodemon": "^1.19.1"
   }
 }
