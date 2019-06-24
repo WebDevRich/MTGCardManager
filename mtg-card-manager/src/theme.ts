@@ -2,9 +2,6 @@ import { createMuiTheme } from '@material-ui/core';
 import { blueGrey, cyan } from '@material-ui/core/colors';
 
 export const theme = createMuiTheme({
-	typography: {
-		useNextVariants: true,
-	},
 	overrides: {
 		MuiCssBaseline: {
 			'@global': {

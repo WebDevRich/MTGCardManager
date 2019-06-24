@@ -6,7 +6,7 @@ import * as React from 'react';
 const styles = (theme:Theme) =>
 	createStyles({
 		fullWidth: {
-			marginTop: theme.spacing.unit * 3,
+			marginTop: theme.spacing(3),
 		},
 	});
 

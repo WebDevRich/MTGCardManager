@@ -6,10 +6,10 @@ import * as React from 'react';
 const styles = (theme:Theme) =>
 	createStyles({
 		inputInput: {
-			paddingTop: theme.spacing.unit,
-			paddingRight: theme.spacing.unit,
-			paddingBottom: theme.spacing.unit,
-			paddingLeft: theme.spacing.unit,
+			paddingTop: theme.spacing(1),
+			paddingRight: theme.spacing(1),
+			paddingBottom: theme.spacing(1),
+			paddingLeft: theme.spacing(1),
 			width: '100%',
 			[theme.breakpoints.up('sm')]: {
 				width: 200,

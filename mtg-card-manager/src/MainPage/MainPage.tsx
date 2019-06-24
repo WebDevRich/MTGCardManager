@@ -49,10 +49,10 @@ const styles = (uiTheme:Theme) =>
 			backgroundColor: fade(theme.palette.common.white, 0.25),
 			},
 				marginLeft: 0,
-				marginRight: theme.spacing.unit,
+				marginRight: theme.spacing(1),
 			width: '100%',
 			[theme.breakpoints.up('sm')]: {
-			marginLeft: theme.spacing.unit,
+			marginLeft: theme.spacing(1),
 			width: 'auto',
 			},
 			},
@@ -74,7 +74,7 @@ const styles = (uiTheme:Theme) =>
 			}),
 		},
 		menuButton: {
-		marginRight: theme.spacing.unit * 2,
+		marginRight: theme.spacing(2),
 		},
 		hide: {
 			display: 'none',
