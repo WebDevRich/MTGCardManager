@@ -45,9 +45,9 @@ export class TransformCard extends React.PureComponent<TransformCardProps, Trans
 	constructor(props:TransformCardProps) {
 		super(props);
 
-		this.state = {
-			cardFlipped: false,
-		},
+		// this.state = {
+		// 	cardFlipped: false,
+		// },
 
 		this.flipCard = this.flipCard.bind(this);
 	}

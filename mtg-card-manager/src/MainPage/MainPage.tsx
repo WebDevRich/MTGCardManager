@@ -35,6 +35,8 @@ interface MainPageState {
 	// cardNames: string[];
 	hasError: boolean;
 	searchTerm: string;
+	open: boolean;
+	setOpen: boolean;
 }
 
 export interface MainPageProps extends WithStyles<typeof styles> {}
@@ -49,11 +51,14 @@ export class MainPage extends React.PureComponent<MainPageProps, MainPageState> 
 			// cardNames: [],
 			hasError: false,
 			searchTerm: '',
+			open: false,
+			setOpen: false,
 		};
 
 		this.loadNewCards = this.loadNewCards.bind(this);
 		this.hasErrored = this.hasErrored.bind(this);
 		this.submitSearch = this.submitSearch.bind(this);
+		this.handleDrawerClose = this.handleDrawerClose.bind(this);
 	}
 
 	// componentWillMount() {
@@ -111,15 +116,17 @@ export class MainPage extends React.PureComponent<MainPageProps, MainPageState> 
 			});
 	}
 
+	// private [open, setOpen] = React.useState(false);
+
+	private handleDrawerClose() {
+		this.setState({
+			setOpen: false,
+		});
+	}
+
 	public render() {
 
 		const { classes } = this.props;
-
-		const [open, setOpen] = React.useState(false);
-
-		function handleDrawerClose() {
-			setOpen(false);
-		}
 
 		return (
 			<>
@@ -132,13 +139,13 @@ export class MainPage extends React.PureComponent<MainPageProps, MainPageState> 
 					className={classes.drawer}
 					variant='persistent'
 					anchor='left'
-					open={open}
+					open={this.state.open}
 					classes={{
 						paper: classes.drawerPaper,
 					}}
 				>
 					<div className={classes.drawerHeader}>
-						<IconButton onClick={handleDrawerClose}>
+						<IconButton onClick={this.handleDrawerClose}>
 							{theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
 						</IconButton>
 					</div>

@@ -18,6 +18,8 @@ export interface SearchBarState {
 	searchTerm: string;
 	cards: [];
 	error: boolean;
+	open: boolean;
+	setOpen: boolean;
 }
 
 const drawerWidth = 240;
@@ -83,10 +85,13 @@ export class SearchBar extends React.PureComponent<SearchBarProps, SearchBarStat
 			searchTerm: '',
 			cards: [],
 			error: false,
+			open: false,
+			setOpen: false,
 		};
 
 		this.searchTerm = this.searchTerm.bind(this);
 		this.submitSearch = this.submitSearch.bind(this);
+		this.handleDrawerOpen = this.handleDrawerOpen.bind(this);
 	}
 
 	private searchTerm(value:any) {
@@ -100,31 +105,31 @@ export class SearchBar extends React.PureComponent<SearchBarProps, SearchBarStat
 		this.props.submitSearch(this.state.searchTerm);
 	}
 
+	private handleDrawerOpen() {
+		this.setState({
+			setOpen: true,
+		});
+	}
+
 	public render() {
 
 		const { classes } = this.props;
-
-		const [open, setOpen] = React.useState(false);
-
-		function handleDrawerOpen() {
-			setOpen(true);
-		}
 
 		return (
 			<div className={classes.searchBar}>
 				<AppBar
 					position='fixed'
 					className={clsx(classes.appBar, {
-						[classes.appBarShift]: open,
+						[classes.appBarShift]: this.state.open,
 					})}
 				>
 					<Toolbar>
 						<IconButton
 							color='inherit'
 							aria-label='Open drawer'
-							onClick={handleDrawerOpen}
+							onClick={this.handleDrawerOpen}
 							// edge="start"
-							className={clsx(classes.menuButton, open && classes.hide)}
+							className={clsx(classes.menuButton, this.state.open && classes.hide)}
 						>
 							<MenuIcon />
 						</IconButton>
