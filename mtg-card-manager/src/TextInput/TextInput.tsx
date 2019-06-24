@@ -45,10 +45,13 @@ export class TextInput extends React.PureComponent<TextInputProps, TextInputStat
 			inputValue: '',
 			// suggestions: [],
 		};
+
+		this.inputValueChange = this.inputValueChange.bind(this);
 	}
 
 	private inputValueChange(e:React.ChangeEvent<HTMLInputElement>) {
 		const value = e.currentTarget.value;
+		// console.log(value);
 		// const { searchSuggestions } = this.props;
 
 		// if (this.state.inputValue.length > 3) {

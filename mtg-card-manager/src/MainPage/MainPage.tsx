@@ -116,8 +116,6 @@ export class MainPage extends React.PureComponent<MainPageProps, MainPageState> 
 			});
 	}
 
-	// private [open, setOpen] = React.useState(false);
-
 	private handleDrawerClose() {
 		this.setState({
 			setOpen: false,
