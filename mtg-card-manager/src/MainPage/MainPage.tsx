@@ -87,6 +87,21 @@ const useStyles = makeStyles((theme:Theme) =>
 		hide: {
 			display: 'none',
 		},
+		content: {
+			flexGrow: 1,
+			transition: theme.transitions.create('margin', {
+				easing: theme.transitions.easing.sharp,
+				duration: theme.transitions.duration.leavingScreen,
+			}),
+			marginLeft: 0,
+		},
+		contentShift: {
+			transition: theme.transitions.create('margin', {
+				easing: theme.transitions.easing.easeOut,
+				duration: theme.transitions.duration.enteringScreen,
+			}),
+			marginLeft: drawerWidth,
+		},
 }));
 
 export default function MainPage() {
@@ -194,13 +209,18 @@ export default function MainPage() {
 					</ListItem>
 				</List>
 			</Drawer>
-
-			<CardGrid open={open}>
-				{cards}
-				{hasError &&
-					<ErrorMessage />
-				}
-			</CardGrid>
+			<div
+				className={clsx(classes.content, {
+					[classes.contentShift]: open,
+				})}
+			>
+				<CardGrid open={open}>
+					{cards}
+					{hasError &&
+						<ErrorMessage />
+					}
+				</CardGrid>
+			</div>
 		</>
 	);
 }
