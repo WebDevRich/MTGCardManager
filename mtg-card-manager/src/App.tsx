@@ -8,11 +8,7 @@ import SignInForm from './SignInForm/SignInForm';
 const styles = () =>
 	createStyles({
 		cardManager: {
-			textAlign: 'center',
 			fontFamily: 'Roboto, sans-serif',
-			display: 'grid',
-			gridTemplate: 'auto 1fr / 1fr',
-			gridGap: '20px',
 		},
 	});
 
