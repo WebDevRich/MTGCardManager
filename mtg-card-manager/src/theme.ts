@@ -6,7 +6,7 @@ export const theme = createMuiTheme({
 		MuiCssBaseline: {
 			'@global': {
 				body: {
-					backgroundColor: blueGrey[800],
+					backgroundColor: blueGrey[900],
 				},
 				img: {
 					display: 'inherit',
