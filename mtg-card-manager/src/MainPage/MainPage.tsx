@@ -214,7 +214,7 @@ export default function MainPage() {
 					[classes.contentShift]: open,
 				})}
 			>
-				<CardGrid open={open}>
+				<CardGrid>
 					{cards}
 					{hasError &&
 						<ErrorMessage />
