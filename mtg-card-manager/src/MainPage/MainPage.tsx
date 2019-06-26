@@ -1,5 +1,18 @@
-import { AppBar, Divider, Drawer, IconButton, List, ListItem, ListItemText, Toolbar } from '@material-ui/core';
-import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import {
+	AppBar,
+	Divider,
+	Drawer,
+	IconButton,
+	List,
+	ListItem,
+	ListItemText,
+	Toolbar,
+	Typography } from '@material-ui/core';
+import {
+	createStyles,
+	makeStyles,
+	Theme,
+	useTheme } from '@material-ui/core/styles';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
@@ -12,12 +25,11 @@ import CardGrid from '../CardGrid/CardGrid';
 import ErrorMessage from '../ErrorMessage/ErrorMessage';
 import SingleCard from '../SingleCard/SingleCard';
 import TextInput from '../TextInput/TextInput';
-import { theme } from '../theme';
 import TransformCard from '../TransformCard/TransformCard';
 
 const drawerWidth = 240;
 
-const styles = (uiTheme:Theme) =>
+const useStyles = makeStyles((theme:Theme) =>
 	createStyles({
 		drawer: {
 			width: drawerWidth,
@@ -30,16 +42,8 @@ const styles = (uiTheme:Theme) =>
 			display: 'flex',
 			alignItems: 'center',
 			padding: '0 8px',
-			...uiTheme.mixins.toolbar,
+			...theme.mixins.toolbar,
 			justifyContent: 'flex-end',
-		},
-		searchBar: {
-			gridColumn: '1 / -1',
-			padding: 20,
-			display: 'flex',
-			justifyContent: 'center',
-			backgroundColor: theme.palette.secondary.dark,
-			color: theme.palette.secondary.contrastText,
 		},
 		search: {
 			position: 'relative',
@@ -55,14 +59,18 @@ const styles = (uiTheme:Theme) =>
 			marginLeft: theme.spacing(1),
 			width: 'auto',
 			},
-			},
-			searchForm: {
-				display: 'flex;',
-			},
-			appBar: {
+		},
+		searchForm: {
+			display: 'flex;',
+			justifyContent: 'center',
+		},
+		title: {
+			flexGrow: 1,
+		},
+		appBar: {
 			transition: theme.transitions.create(['margin', 'width'], {
-			easing: theme.transitions.easing.sharp,
-			duration: theme.transitions.duration.leavingScreen,
+				easing: theme.transitions.easing.sharp,
+				duration: theme.transitions.duration.leavingScreen,
 			}),
 		},
 		appBarShift: {
@@ -74,75 +82,35 @@ const styles = (uiTheme:Theme) =>
 			}),
 		},
 		menuButton: {
-		marginRight: theme.spacing(2),
+			marginRight: theme.spacing(2),
 		},
 		hide: {
 			display: 'none',
 		},
-});
+}));
 
-interface MainPageState {
-	cards: string[];
-	// cardNames: string[];
-	hasError: boolean;
-	searchTerm: string;
-	open: boolean;
-	setOpen: boolean;
-}
+export default function MainPage() {
+	const classes = useStyles();
+	const myTheme = useTheme();
+	const [open, setOpen] = React.useState(false);
+	const [hasError, setHasError] = React.useState(false);
+	const [cards, setCards] = React.useState([]);
+	const [searchTerm, setSearchTerm] = React.useState('');
 
-export interface MainPageProps extends WithStyles<typeof styles> {}
-
-export class MainPage extends React.PureComponent<MainPageProps, MainPageState> {
-
-	constructor(props:MainPageProps) {
-		super(props);
-
-		this.state = {
-			cards: [],
-			// cardNames: [],
-			hasError: false,
-			searchTerm: '',
-			open: false,
-			setOpen: false,
-		};
-
-		this.loadNewCards = this.loadNewCards.bind(this);
-		this.hasErrored = this.hasErrored.bind(this);
-		this.submitSearch = this.submitSearch.bind(this);
-		this.handleDrawerClose = this.handleDrawerClose.bind(this);
-		this.handleDrawerOpen = this.handleDrawerOpen.bind(this);
+	function handleDrawerOpen() {
+		setOpen(true);
 	}
 
-	// componentWillMount() {
-	// 	fetch('https://api.scryfall.com/catalog/card-names')
-	// 	.then(response => response.json())
-	// 	.then(response => {
-	// 		this.setState({
-	// 			cardNames: response.data,
-	// 		}, () => {
-	// 			console.log(this.state.cardNames);
-	// 		});
-	// 	})
-	// }
-
-	private loadNewCards(newCards:[]) {
-		this.setState({
-			cards: newCards,
-		});
+	function handleDrawerClose() {
+		setOpen(false);
 	}
 
-	private hasErrored(hasError:boolean) {
-		this.setState({
-			hasError,
-		});
-	}
-
-	private submitSearch(e:React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>) {
+	function submitSearch(e:React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>) {
 		e.preventDefault();
-		fetch(`https://api.scryfall.com/cards/search?order=released&q=${this.state.searchTerm}`)
+		fetch(`https://api.scryfall.com/cards/search?order=released&q=${searchTerm}`)
 			.then(response => response.json())
 			.then(response => {
-				const cards = response.data.map((cardItem:any, index:number) => {
+				const newCards = response.data.map((cardItem:any, index:number) => {
 					return cardItem.image_uris ? (
 						<SingleCard key={index} alt={cardItem.name} src={cardItem.image_uris.border_crop} />
 					) : (
@@ -155,114 +123,84 @@ export class MainPage extends React.PureComponent<MainPageProps, MainPageState> 
 						/>
 					);
 				});
-				this.setState({
-					cards,
-					hasError: false,
-				});
+				setCards(newCards);
+				setHasError(false);
 			})
 			.catch(error => {
-				this.setState({
-					cards: [],
-					hasError: true,
-				});
+				setCards(cards);
+				setHasError(true);
 				console.log(error);
 			});
 	}
 
-	private searchTerm(value:any) {
-		this.setState({
-			searchTerm: value,
-		});
+	function updateSearchTerm(value:any) {
+		setSearchTerm(value);
 	}
 
-	private handleDrawerClose() {
-		this.setState({
-			setOpen: false,
-		}, () => {
-			console.log('close');
-		});
-	}
-
-	private handleDrawerOpen() {
-		this.setState({
-			setOpen: true,
-		}, () => {
-			console.log('open');
-		});
-	}
-
-	public render() {
-
-		const { classes } = this.props;
-
-		return (
-			<>
-				<div className={classes.searchBar}>
-					<AppBar
-						position='fixed'
-						className={clsx(classes.appBar, {
-							[classes.appBarShift]: this.state.open,
-						})}
+	return (
+		<>
+			<AppBar
+				position='fixed'
+				className={clsx(classes.appBar, {
+					[classes.appBarShift]: open,
+				})}
+				color='secondary'
+			>
+				<Toolbar>
+					<IconButton
+						color='inherit'
+						aria-label='Open drawer'
+						onClick={handleDrawerOpen}
+						edge='start'
+						className={clsx(classes.menuButton, open && classes.hide)}
 					>
-						<Toolbar>
-							<IconButton
-								color='inherit'
-								aria-label='Open drawer'
-								onClick={this.handleDrawerOpen}
-								// edge="start"
-								className={clsx(classes.menuButton, this.state.open && classes.hide)}
-							>
-								<MenuIcon />
-							</IconButton>
-						</Toolbar>
-						<form noValidate={true} className={classes.searchForm} onSubmit={this.submitSearch}>
-							<div className={classes.search}>
-								<TextInput
-									inputValue={this.searchTerm}
-									placeholder='Search...'
-									// searchSuggestions={this.props.searchSuggestions}
-								/>
-							</div>
-							<ButtonComponent onClick={this.submitSearch} color='primary' type='submit' variant='contained'>
-								<SearchIcon />
-							</ButtonComponent>
-						</form>
-					</AppBar>
+						<MenuIcon />
+					</IconButton>
+					<Typography variant='h6' noWrap={true} className={classes.title}>
+						MTG Card Manager
+					</Typography>
+					<form noValidate={true} className={classes.searchForm} onSubmit={submitSearch}>
+						<div className={classes.search}>
+							<TextInput
+								inputValue={updateSearchTerm}
+								placeholder='Search...'
+								// searchSuggestions={this.props.searchSuggestions}
+							/>
+						</div>
+						<ButtonComponent onClick={submitSearch} color='primary' type='submit' variant='contained'>
+							<SearchIcon />
+						</ButtonComponent>
+					</form>
+				</Toolbar>
+			</AppBar>
+			<Drawer
+				className={classes.drawer}
+				variant='persistent'
+				anchor='left'
+				open={open}
+				classes={{
+					paper: classes.drawerPaper,
+				}}
+			>
+				<div className={classes.drawerHeader}>
+					<IconButton onClick={handleDrawerClose}>
+						{myTheme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+					</IconButton>
 				</div>
-				<Drawer
-					className={classes.drawer}
-					variant='persistent'
-					anchor='left'
-					open={this.state.open}
-					classes={{
-						paper: classes.drawerPaper,
-					}}
-				>
-					<div className={classes.drawerHeader}>
-						<IconButton onClick={this.handleDrawerClose}>
-							{theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-						</IconButton>
-					</div>
-					<Divider />
-					<List>
-						<ListItem button={true}>
-							<ListItemText primary='Library' />
-						</ListItem>
-					</List>
-				</Drawer>
+				<Divider />
+				<List>
+					<ListItem button={true}>
+						<ListItemText primary='Library' />
+					</ListItem>
+				</List>
+			</Drawer>
 
-				<CardGrid>
-
-					{this.state.cards}
-
-					{this.state.hasError &&
-						<ErrorMessage />
-					}
-
-				</CardGrid>
-			</>
-		);
-	}
+			<CardGrid open={open}>
+				{cards}
+				{hasError &&
+					<ErrorMessage />
+				}
+			</CardGrid>
+		</>
+	);
 }
-
-export default withStyles(styles)(MainPage);
