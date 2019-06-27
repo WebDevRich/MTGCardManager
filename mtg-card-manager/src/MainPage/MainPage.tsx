@@ -1,13 +1,10 @@
 import {
-	AppBar,
 	Divider,
 	Drawer,
 	IconButton,
 	List,
 	ListItem,
-	ListItemText,
-	Toolbar,
-	Typography } from '@material-ui/core';
+	ListItemText } from '@material-ui/core';
 import {
 	createStyles,
 	makeStyles,
@@ -16,16 +13,11 @@ import {
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
 import clsx from 'clsx';
 import * as React from 'react';
-import ButtonComponent from '../ButtonComponent/ButtonComponent';
 import CardGrid from '../CardGrid/CardGrid';
 import ErrorMessage from '../ErrorMessage/ErrorMessage';
-import SingleCard from '../SingleCard/SingleCard';
-import TextInput from '../TextInput/TextInput';
-import TransformCard from '../TransformCard/TransformCard';
+import MTGAppBar from '../MTGAppBar/MTGAppBar';
 
 const drawerWidth = 240;
 
@@ -110,84 +102,19 @@ export default function MainPage() {
 	const [open, setOpen] = React.useState(false);
 	const [hasError, setHasError] = React.useState(false);
 	const [cards, setCards] = React.useState([]);
-	const [searchTerm, setSearchTerm] = React.useState('');
-
-	function handleDrawerOpen() {
-		setOpen(true);
-	}
 
 	function handleDrawerClose() {
 		setOpen(false);
 	}
 
-	function submitSearch(e:React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>) {
-		e.preventDefault();
-		fetch(`https://api.scryfall.com/cards/search?order=released&q=${searchTerm}`)
-			.then(response => response.json())
-			.then(response => {
-				const newCards = response.data.map((cardItem:any, index:number) => {
-					return cardItem.image_uris ? (
-						<SingleCard key={index} alt={cardItem.name} src={cardItem.image_uris.border_crop} />
-					) : (
-						<TransformCard
-							faceOneImage={cardItem.card_faces[0].image_uris.border_crop}
-							faceOneName={cardItem.card_faces[0].name}
-							faceTwoImage={cardItem.card_faces[1].image_uris.border_crop}
-							faceTwoName={cardItem.card_faces[1].name}
-							key={index}
-						/>
-					);
-				});
-				setCards(newCards);
-				setHasError(false);
-			})
-			.catch(error => {
-				setCards(cards);
-				setHasError(true);
-				console.log(error);
-			});
-	}
-
-	function updateSearchTerm(value:any) {
-		setSearchTerm(value);
+	function handleNewCards(newCards:any) {
+		setCards(newCards);
 	}
 
 	return (
 		<>
-			<AppBar
-				position='fixed'
-				className={clsx(classes.appBar, {
-					[classes.appBarShift]: open,
-				})}
-				color='secondary'
-			>
-				<Toolbar>
-					<IconButton
-						color='inherit'
-						aria-label='Open drawer'
-						onClick={handleDrawerOpen}
-						edge='start'
-						className={clsx(classes.menuButton, open && classes.hide)}
-					>
-						<MenuIcon />
-					</IconButton>
-					<Typography variant='h6' noWrap={true} className={classes.title}>
-						MTG Card Manager
-					</Typography>
-					<form noValidate={true} className={classes.searchForm} onSubmit={submitSearch}>
-						<div className={classes.search}>
-							<TextInput
-								inputValue={updateSearchTerm}
-								placeholder='Search...'
-								// searchSuggestions={this.props.searchSuggestions}
-							/>
-						</div>
-						<ButtonComponent onClick={submitSearch} color='primary' type='submit' variant='contained'>
-							<SearchIcon />
-						</ButtonComponent>
-					</form>
-				</Toolbar>
-			</AppBar>
+			<MTGAppBar cards={handleNewCards} />
+
 			<Drawer
 				className={classes.drawer}
 				variant='persistent'
@@ -214,7 +141,7 @@ export default function MainPage() {
 					[classes.contentShift]: open,
 				})}
 			>
-				<CardGrid>
+				<CardGrid hasError={hasError}>
 					{cards}
 					{hasError &&
 						<ErrorMessage />
