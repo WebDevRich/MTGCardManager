@@ -14,7 +14,8 @@ import { fade } from '@material-ui/core/styles/colorManipulator';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import clsx from 'clsx';
-import * as React from 'react';
+import React, { useContext } from 'react';
+import { Store } from '../App';
 import CardGrid from '../CardGrid/CardGrid';
 import ErrorMessage from '../ErrorMessage/ErrorMessage';
 import MTGAppBar from '../MTGAppBar/MTGAppBar';
@@ -99,33 +100,40 @@ const useStyles = makeStyles((theme:Theme) =>
 export default function MainPage() {
 	const classes = useStyles();
 	const myTheme = useTheme();
-	const [open, setOpen] = React.useState(false);
 	const [hasError, setHasError] = React.useState(false);
 	const [cards, setCards] = React.useState([]);
+	const { state, dispatch } = useContext(Store);
 
-	function handleDrawerClose() {
-		setOpen(false);
-	}
+	const handleCloseDrawer = () => {
+		dispatch({ type: 'CLOSE_DRAWER' });
+	};
 
 	function handleNewCards(newCards:any) {
 		setCards(newCards);
 	}
 
+	function handleHasError(passedErrorState:boolean) {
+		setHasError(passedErrorState);
+	}
+
 	return (
 		<>
-			<MTGAppBar cards={handleNewCards} />
+			<MTGAppBar
+				cards={handleNewCards}
+				hasError={handleHasError}
+			/>
 
 			<Drawer
 				className={classes.drawer}
 				variant='persistent'
 				anchor='left'
-				open={open}
+				open={state.open}
 				classes={{
 					paper: classes.drawerPaper,
 				}}
 			>
 				<div className={classes.drawerHeader}>
-					<IconButton onClick={handleDrawerClose}>
+					<IconButton onClick={handleCloseDrawer}>
 						{myTheme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
 					</IconButton>
 				</div>
@@ -138,7 +146,7 @@ export default function MainPage() {
 			</Drawer>
 			<div
 				className={clsx(classes.content, {
-					[classes.contentShift]: open,
+					[classes.contentShift]: state.open,
 				})}
 			>
 				<CardGrid hasError={hasError}>

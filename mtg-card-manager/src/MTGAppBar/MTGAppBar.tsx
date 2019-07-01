@@ -11,7 +11,8 @@ import { fade } from '@material-ui/core/styles/colorManipulator';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import clsx from 'clsx';
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
+import { Store } from '../App';
 import ButtonComponent from '../ButtonComponent/ButtonComponent';
 import SingleCard from '../SingleCard/SingleCard';
 import TextInput from '../TextInput/TextInput';
@@ -68,13 +69,13 @@ const useStyles = makeStyles((theme:Theme) =>
 export default function MTGAppBar(props:any) {
 
 	const classes = useStyles(props);
-	const [open, setOpen] = React.useState(false);
 	const [hasError, setHasError] = React.useState(false);
 	const [cards, setCards] = React.useState([]);
 	const [searchTerm, setSearchTerm] = React.useState('');
+	const { state, dispatch } = useContext(Store);
 
-	function handleDrawerOpen() {
-		setOpen(true);
+	function updateSearchTerm(value:any) {
+		setSearchTerm(value);
 	}
 
 	function submitSearch(e:React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>) {
@@ -106,23 +107,22 @@ export default function MTGAppBar(props:any) {
 	}
 
 	useEffect(() => {
-		console.log(hasError);
+		props.hasError(hasError);
 	}, [hasError]);
 
 	useEffect(() => {
 		props.cards(cards);
-		console.log(cards);
 	}, [cards]);
 
-	function updateSearchTerm(value:any) {
-		setSearchTerm(value);
-	}
+	const handleOpenDrawer = () => {
+		dispatch({ type: 'OPEN_DRAWER' });
+	};
 
 	return (
 		<AppBar
 			position='fixed'
 			className={clsx(classes.appBar, {
-				[classes.appBarShift]: open,
+				[classes.appBarShift]: state.open,
 			})}
 			color='secondary'
 		>
@@ -130,9 +130,9 @@ export default function MTGAppBar(props:any) {
 				<IconButton
 					color='inherit'
 					aria-label='Open drawer'
-					onClick={handleDrawerOpen}
+					onClick={handleOpenDrawer}
 					edge='start'
-					className={clsx(classes.menuButton, open && classes.hide)}
+					className={clsx(classes.menuButton, state.open && classes.hide)}
 				>
 					<MenuIcon />
 				</IconButton>
