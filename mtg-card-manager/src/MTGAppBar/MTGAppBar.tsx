@@ -8,6 +8,7 @@ import {
 	makeStyles,
 	Theme } from '@material-ui/core/styles';
 import { fade } from '@material-ui/core/styles/colorManipulator';
+import Add from '@material-ui/icons/Add';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import clsx from 'clsx';
@@ -64,6 +65,12 @@ const useStyles = makeStyles((theme:Theme) =>
 		hide: {
 			display: 'none',
 		},
+		resultContainer: {
+			display: 'flex',
+			flexDirection: 'column',
+			justifyContent: 'space-between',
+			boxShadow: '0px 1px 5px 0px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 3px 1px -2px rgba(0,0,0,0.12)',
+		},
 }));
 
 export default function MTGAppBar(props:any) {
@@ -74,8 +81,13 @@ export default function MTGAppBar(props:any) {
 	const [searchTerm, setSearchTerm] = React.useState('');
 	const { state, dispatch } = useContext(Store);
 
+
 	function updateSearchTerm(value:any) {
 		setSearchTerm(value);
+	}
+
+	function addToLibrary() {
+		console.log('added');
 	}
 
 	function submitSearch(e:React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>) {
@@ -85,15 +97,37 @@ export default function MTGAppBar(props:any) {
 			.then(response => {
 				const newCards = response.data.map((cardItem:any, index:number) => {
 					return cardItem.image_uris ? (
-						<SingleCard key={index} alt={cardItem.name} src={cardItem.image_uris.border_crop} />
+						<div className={classes.resultContainer}>
+							<SingleCard key={index} alt={cardItem.name} src={cardItem.image_uris.border_crop} />
+							<ButtonComponent
+								onClick={addToLibrary}
+								color='primary'
+								type='submit'
+								variant='contained'
+								attached={true}
+							>
+								<Add /> Add to library
+							</ButtonComponent>
+						</div>
 					) : (
-						<TransformCard
-							faceOneImage={cardItem.card_faces[0].image_uris.border_crop}
-							faceOneName={cardItem.card_faces[0].name}
-							faceTwoImage={cardItem.card_faces[1].image_uris.border_crop}
-							faceTwoName={cardItem.card_faces[1].name}
-							key={index}
-						/>
+						<div className={classes.resultContainer}>
+							<TransformCard
+								faceOneImage={cardItem.card_faces[0].image_uris.border_crop}
+								faceOneName={cardItem.card_faces[0].name}
+								faceTwoImage={cardItem.card_faces[1].image_uris.border_crop}
+								faceTwoName={cardItem.card_faces[1].name}
+								key={index}
+							/>
+							<ButtonComponent
+								onClick={addToLibrary}
+								color='primary'
+								type='submit'
+								variant='contained'
+								attached={true}
+							>
+								<Add /> Add to library
+							</ButtonComponent>
+						</div>
 					);
 				});
 				setCards(newCards);

@@ -1,37 +1,39 @@
-import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import * as React from 'react';
+import ButtonComponent from '../ButtonComponent/ButtonComponent';
 
-const styles = () =>
+const useStyles = makeStyles((theme:Theme) =>
 	createStyles({
-		singleCard: {
+		cardContainer: {
 			gridColumn: 'span 1',
+			display: 'grid',
 			borderRadius: 4,
 			overflow: 'hidden',
-			boxShadow: '1px 1px 2px 0px rgba(0,0,0,0.5)',
 			'& img': {
 				width: '100%',
 				height: 'auto',
 			},
 		},
-	});
+		singleCard: {
+			gridColumn: '1 / -1',
+			gridRow: '1 / -1',
+		},
+	}));
 
-export interface SingleCardProps extends WithStyles<typeof styles> {
+interface SingleCardProps {
 	src: string;
 	alt: string;
 }
 
-export class SingleCard extends React.PureComponent<SingleCardProps> {
+export default function SingleCard(props:SingleCardProps) {
 
-	public render() {
+	const classes = useStyles(props);
 
-		const { classes } = this.props;
-
-		return(
+	return(
+		<div className={classes.cardContainer}>
 			<div className={classes.singleCard}>
-				<img src={this.props.src} alt={this.props.alt} />
+				<img src={props.src} alt={props.alt} />
 			</div>
-		);
-	}
+		</div>
+	);
 }
-
-export default withStyles(styles)(SingleCard);

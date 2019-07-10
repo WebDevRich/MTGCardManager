@@ -1,16 +1,23 @@
 import { Button, PropTypes } from '@material-ui/core';
 import { ButtonProps } from '@material-ui/core/Button';
-import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import * as React from 'react';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import React, { useState } from 'react';
 
-const styles = (theme:Theme) =>
+const useStyles = makeStyles((theme:Theme) =>
 	createStyles({
 		fullWidth: {
 			marginTop: theme.spacing(3),
 		},
-	});
+		attachedButton: {
+			boxShadow: 'none',
+			borderRadius: '0 0 4px 4px',
+		},
+	}));
 
-export interface ButtonComponentProps extends WithStyles<typeof styles> {
+export interface ButtonComponentProps {
+	attached?: boolean;
+	children: any;
+	classNames?: string;
 	color?: PropTypes.Color;
 	fullWidth?: boolean;
 	onClick(e:React.MouseEvent<HTMLButtonElement>):void;
@@ -18,49 +25,28 @@ export interface ButtonComponentProps extends WithStyles<typeof styles> {
 	variant?: ButtonProps['variant'];
 }
 
-export interface ButtonComponentState {
-	clicked: boolean;
+export default function ButtonComponent(props:ButtonComponentProps) {
+
+	const classes = useStyles(props);
+
+	function buttonClicked(e:React.MouseEvent<HTMLButtonElement>) {
+		props.onClick(e);
+	}
+
+	return (
+		<Button
+			color={props.color}
+			className={`
+				${props.fullWidth ? classes.fullWidth : ''}
+				${props.classNames}
+				${props.attached ? classes.attachedButton : '' }
+			`}
+			fullWidth={props.fullWidth}
+			type={props.type}
+			onClick={buttonClicked}
+			variant={props.variant}
+		>
+			{props.children}
+		</Button>
+	);
 }
-
-export class ButtonComponent extends React.PureComponent<ButtonComponentProps, ButtonComponentState> {
-
-	constructor(props:ButtonComponentProps) {
-		super(props);
-
-		this.state = {
-			clicked: false,
-		};
-
-		this.buttonClicked = this.buttonClicked.bind(this);
-	}
-
-	private buttonClicked(e:React.MouseEvent<HTMLButtonElement>) {
-		this.props.onClick(e);
-	}
-
-	public render() {
-
-		const {
-			classes,
-			color,
-			fullWidth,
-			type,
-			variant,
-		} = this.props;
-
-		return(
-			<Button
-				color={color}
-				className={fullWidth ? classes.fullWidth : ''}
-				fullWidth={fullWidth}
-				type={type}
-				onClick={this.buttonClicked}
-				variant={variant}
-			>
-				{this.props.children}
-			</Button>
-		);
-	}
-}
-
-export default withStyles(styles)(ButtonComponent);
