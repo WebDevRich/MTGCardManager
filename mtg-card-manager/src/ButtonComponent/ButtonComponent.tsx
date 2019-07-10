@@ -1,7 +1,7 @@
 import { Button, PropTypes } from '@material-ui/core';
 import { ButtonProps } from '@material-ui/core/Button';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import React, { useState } from 'react';
+import React from 'react';
 
 const useStyles = makeStyles((theme:Theme) =>
 	createStyles({
