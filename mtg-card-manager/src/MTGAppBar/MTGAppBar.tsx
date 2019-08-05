@@ -12,7 +12,7 @@ import Add from '@material-ui/icons/Add';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import clsx from 'clsx';
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { Store } from '../App';
 import ButtonComponent from '../ButtonComponent/ButtonComponent';
 import SingleCard from '../SingleCard/SingleCard';
@@ -76,7 +76,7 @@ const useStyles = makeStyles((theme:Theme) =>
 export default function MTGAppBar(props:any) {
 
 	const classes = useStyles(props);
-	const [hasError, setHasError] = React.useState(false);
+	// const [hasError, setHasError] = React.useState(false);
 	const [cards, setCards] = React.useState([]);
 	const [searchTerm, setSearchTerm] = React.useState('');
 	const { state, dispatch } = useContext(Store);
@@ -96,6 +96,8 @@ export default function MTGAppBar(props:any) {
 			.then(response => response.json())
 			.then(response => {
 				const newCards = response.data.map((cardItem:any, index:number) => {
+					console.log(cardItem);
+
 					return cardItem.image_uris ? (
 						<div className={classes.resultContainer}>
 							<SingleCard key={index} alt={cardItem.name} src={cardItem.image_uris.border_crop} />
@@ -131,22 +133,22 @@ export default function MTGAppBar(props:any) {
 					);
 				});
 				setCards(newCards);
-				setHasError(false);
+				// setHasError(false);
 			})
 			.catch(error => {
 				setCards(cards);
-				setHasError(true);
+				// setHasError(true);
 				console.log(error);
 			});
 	}
 
-	useEffect(() => {
-		props.hasError(hasError);
-	}, [hasError]);
+	// useEffect(() => {
+	// 	props.hasError(hasError);
+	// }, [hasError]);
 
-	useEffect(() => {
-		props.cards(cards);
-	}, [cards]);
+	// useEffect(() => {
+	// 	props.cards(cards);
+	// }, [cards]);
 
 	const handleOpenDrawer = () => {
 		dispatch({ type: 'OPEN_DRAWER' });
