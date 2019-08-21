@@ -12,7 +12,7 @@ import Add from '@material-ui/icons/Add';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import clsx from 'clsx';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Store } from '../App';
 import ButtonComponent from '../ButtonComponent/ButtonComponent';
 import SingleCard from '../SingleCard/SingleCard';
@@ -77,7 +77,7 @@ export default function MTGAppBar(props:any) {
 
 	const classes = useStyles(props);
 	// const [hasError, setHasError] = React.useState(false);
-	const [cards, setCards] = React.useState([]);
+	const [cardList, setCardList] = React.useState([]);
 	const [searchTerm, setSearchTerm] = React.useState('');
 	const { state, dispatch } = useContext(Store);
 
@@ -96,7 +96,6 @@ export default function MTGAppBar(props:any) {
 			.then(response => response.json())
 			.then(response => {
 				const newCards = response.data.map((cardItem:any, index:number) => {
-					console.log(cardItem);
 
 					return cardItem.image_uris ? (
 						<div className={classes.resultContainer}>
@@ -132,11 +131,11 @@ export default function MTGAppBar(props:any) {
 						</div>
 					);
 				});
-				setCards(newCards);
+				setCardList(newCards);
 				// setHasError(false);
 			})
 			.catch(error => {
-				setCards(cards);
+				setCardList(cardList);
 				// setHasError(true);
 				console.log(error);
 			});
@@ -146,9 +145,10 @@ export default function MTGAppBar(props:any) {
 	// 	props.hasError(hasError);
 	// }, [hasError]);
 
-	// useEffect(() => {
-	// 	props.cards(cards);
-	// }, [cards]);
+	useEffect(() => {
+		const { cards } = props;
+		cards(cardList);
+	}, [props, cardList]);
 
 	const handleOpenDrawer = () => {
 		dispatch({ type: 'OPEN_DRAWER' });
