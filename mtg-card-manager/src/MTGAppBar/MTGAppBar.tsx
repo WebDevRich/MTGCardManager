@@ -76,7 +76,7 @@ const useStyles = makeStyles((theme:Theme) =>
 export default function MTGAppBar(props:any) {
 
 	const classes = useStyles(props);
-	// const [hasError, setHasError] = React.useState(false);
+	const [hasError, setHasError] = React.useState(false);
 	const [cardList, setCardList] = React.useState([]);
 	const [searchTerm, setSearchTerm] = React.useState('');
 	const { state, dispatch } = useContext(Store);
@@ -96,7 +96,6 @@ export default function MTGAppBar(props:any) {
 			.then(response => response.json())
 			.then(response => {
 				const newCards = response.data.map((cardItem:any, index:number) => {
-
 					return cardItem.image_uris ? (
 						<div className={classes.resultContainer}>
 							<SingleCard key={index} alt={cardItem.name} src={cardItem.image_uris.border_crop} />
@@ -132,18 +131,18 @@ export default function MTGAppBar(props:any) {
 					);
 				});
 				setCardList(newCards);
-				// setHasError(false);
+				setHasError(false);
 			})
 			.catch(error => {
 				setCardList(cardList);
-				// setHasError(true);
+				setHasError(true);
 				console.log(error);
 			});
 	}
 
-	// useEffect(() => {
-	// 	props.hasError(hasError);
-	// }, [hasError]);
+	useEffect(() => {
+		props.hasError(hasError);
+	}, [hasError]);
 
 	useEffect(() => {
 		const { cards } = props;
