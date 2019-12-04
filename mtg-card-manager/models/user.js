@@ -1,4 +1,3 @@
-// /backend/user.js
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
@@ -11,6 +10,10 @@ const UserSchema = new Schema({
   },
   password: {
     type: String,
+    required: true
+  },
+  library: {
+    type: [],
     required: true
   }
 });
