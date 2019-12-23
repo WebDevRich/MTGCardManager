@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-// this will be our data base's user structure
+// this will be our data base's library structure
 
 const LibrarySchema = new Schema({
 	library: {

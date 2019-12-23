@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 
 // Load User model
-const Library = require("../../models/library");
 const User = require("../../models/user");
 
 // @route POST api/users/library
@@ -11,13 +10,15 @@ const User = require("../../models/user");
 router.post("/updateLibrary", (req, res) => {
 
 	User.findOne({ email: req.body.email }).then(user => {
-		const addToLibrary = new Library({
-			library: req.body.newlibraryItems
-		})
 
-		user.library.push(addToLibrary)
+		const newlibraryItems = req.body.newlibraryItems;
+
+		user.library.addToSet(newlibraryItems)
 		user.save()
+		.then(user => res.json(user))
+		.catch(err => console.log(err));
 	});
+
 });
 
 module.exports = router;
