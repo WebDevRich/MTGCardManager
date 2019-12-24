@@ -13,6 +13,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import clsx from 'clsx';
 import React, { useContext, useEffect } from 'react';
+import { updateLibrary } from '../actions/updateLibrary';
 import { Store } from '../App';
 import ButtonComponent from '../ButtonComponent/ButtonComponent';
 import SingleCard from '../SingleCard/SingleCard';
@@ -86,8 +87,23 @@ export default function MTGAppBar(props:any) {
 		setSearchTerm(value);
 	}
 
-	function addToLibrary() {
-		console.log('added');
+	function handleErrorResponse(response:any) {
+		console.log(response);
+	}
+
+	function addToLibrary(cardId:number) {
+		const userData = {
+			email: 'rich@example.com',
+			newlibraryItems: cardId,
+		};
+
+		updateLibrary(userData,
+			(response:any) => {
+				if (response.status !== 200) {
+					handleErrorResponse(response);
+				}
+			},
+		);
 	}
 
 	function submitSearch(e:React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>) {
@@ -97,11 +113,15 @@ export default function MTGAppBar(props:any) {
 			.then(response => {
 				const newCards = response.data.map((cardItem:any, index:number) => {
 
+					const handleClick = () => {
+						addToLibrary(cardItem.id);
+					};
+
 					return cardItem.image_uris ? (
 						<div className={classes.resultContainer}>
 							<SingleCard key={index} alt={cardItem.name} src={cardItem.image_uris.border_crop} />
 							<ButtonComponent
-								onClick={addToLibrary}
+								onClick={handleClick}
 								color='primary'
 								type='submit'
 								variant='contained'
@@ -120,7 +140,7 @@ export default function MTGAppBar(props:any) {
 								key={index}
 							/>
 							<ButtonComponent
-								onClick={addToLibrary}
+								onClick={handleClick}
 								color='primary'
 								type='submit'
 								variant='contained'
