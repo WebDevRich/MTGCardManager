@@ -161,7 +161,7 @@ export default function SignInForm(props:SignInFormProps) {
 
 	return(
 		<>
-			{ state.userEmail &&
+			{ state.userId &&
 				<Redirect to='/' />
 			}
 
@@ -175,7 +175,7 @@ export default function SignInForm(props:SignInFormProps) {
 					</Typography>
 					<form className={classes.form} onSubmit={formSubmit}>
 						<FormControl margin='normal' error={emailError} required={true} fullWidth={true}>
-							<InputLabel	htmlFor='email'>Email Address {state.userEmail}</InputLabel>
+							<InputLabel	htmlFor='email'>Email Address {state.userId}</InputLabel>
 							<Input
 								id='email'
 								name='email'

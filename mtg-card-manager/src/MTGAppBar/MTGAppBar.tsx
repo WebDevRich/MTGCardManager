@@ -176,7 +176,7 @@ export default function MTGAppBar(props:any) {
 
 	return (
 		<>
-			{ !state.userEmail &&
+			{ !state.userId &&
 				<Redirect to='/signin' />
 			}
 
@@ -198,7 +198,7 @@ export default function MTGAppBar(props:any) {
 						<MenuIcon />
 					</IconButton>
 					<Typography variant='h6' noWrap={true} className={classes.title}>
-						MTG Card Manager {state.userEmail}
+						MTG Card Manager {state.userId}
 					</Typography>
 					<form noValidate={true} className={classes.searchForm} onSubmit={submitSearch}>
 						<div className={classes.search}>

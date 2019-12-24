@@ -1,9 +1,9 @@
 export interface IState {
 	isDrawerOpen: boolean;
-	userEmail: string;
+	userId: string;
 }
 
 export const initialState:IState = {
 	isDrawerOpen: false,
-	userEmail: '',
+	userId: '',
 };

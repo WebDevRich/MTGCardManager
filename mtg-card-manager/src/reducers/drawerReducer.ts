@@ -15,7 +15,7 @@ export default (state:IState, action:Actions) => {
 		case 'SET_CURRENT_USER':
 			return {
 				...state,
-				userEmail: action.payload,
+				userId: action.payload,
 			};
 		default:
 			return state;
