@@ -6,7 +6,7 @@ import React, { createContext, Dispatch, useReducer } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { initialState, IState } from './initialStates';
 import MainPage from './MainPage/MainPage';
-import drawerReducer, { Actions } from './reducers/drawerReducer';
+import reducer, { Actions } from './reducers/reducer';
 import SignInForm from './SignInForm/SignInForm';
 
 const useStyles = makeStyles(() =>
@@ -27,7 +27,7 @@ export const Store = createContext({} as IContextProps);
 
 export default function MTGAppBar(props:any) {
 
-	const [ state, dispatch ] = useReducer(drawerReducer, initialState);
+	const [ state, dispatch ] = useReducer(reducer, initialState);
 
 	const classes = useStyles(props);
 
