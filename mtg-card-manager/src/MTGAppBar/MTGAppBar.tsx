@@ -171,7 +171,7 @@ export default function MTGAppBar(props:any) {
 	}, [props, cardList]);
 
 	const handleOpenDrawer = () => {
-		dispatch({ type: 'OPEN_DRAWER' });
+		dispatch({ type: 'TOGGLE_DRAWER' });
 	};
 
 	return (

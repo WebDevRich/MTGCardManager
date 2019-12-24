@@ -4,7 +4,7 @@ import {
 	makeStyles } from '@material-ui/core/styles';
 import React, { createContext, Dispatch, useReducer } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
-import { initialDrawerPosition, IState } from './initialStates';
+import { initialState, IState } from './initialStates';
 import MainPage from './MainPage/MainPage';
 import drawerReducer, { Actions } from './reducers/drawerReducer';
 import SignInForm from './SignInForm/SignInForm';
@@ -27,7 +27,7 @@ export const Store = createContext({} as IContextProps);
 
 export default function MTGAppBar(props:any) {
 
-	const [ state, dispatch ] = useReducer(drawerReducer, initialDrawerPosition);
+	const [ state, dispatch ] = useReducer(drawerReducer, initialState);
 
 	const classes = useStyles(props);
 

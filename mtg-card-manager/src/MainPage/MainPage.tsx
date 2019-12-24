@@ -105,7 +105,7 @@ export default function MainPage() {
 	const { state, dispatch } = useContext(Store);
 
 	const handleCloseDrawer = () => {
-		dispatch({ type: 'CLOSE_DRAWER' });
+		dispatch({ type: 'TOGGLE_DRAWER' });
 	};
 
 	function handleNewCards(newCards:any) {
@@ -127,7 +127,7 @@ export default function MainPage() {
 				className={classes.drawer}
 				variant='persistent'
 				anchor='left'
-				open={state.open}
+				open={state.isDrawerOpen}
 				classes={{
 					paper: classes.drawerPaper,
 				}}
@@ -146,7 +146,7 @@ export default function MainPage() {
 			</Drawer>
 			<div
 				className={clsx(classes.content, {
-					[classes.contentShift]: state.open,
+					[classes.contentShift]: state.isDrawerOpen,
 				})}
 			>
 				<CardGrid hasError={hasError}>

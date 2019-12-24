@@ -1,7 +1,9 @@
 export interface IState {
-	open: boolean;
+	isDrawerOpen: boolean;
+	userEmail: string;
 }
 
-export const initialDrawerPosition:IState = {
-	open: false,
+export const initialState:IState = {
+	isDrawerOpen: false,
+	userEmail: '',
 };

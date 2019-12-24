@@ -1,20 +1,21 @@
 import { IState } from '../initialStates';
 
 export interface Actions {
-	type: 'OPEN_DRAWER' | 'CLOSE_DRAWER';
+	type: 'TOGGLE_DRAWER' | 'SET_CURRENT_USER';
+	payload?: any;
 }
 
 export default (state:IState, action:Actions) => {
 	switch (action.type) {
-		case 'OPEN_DRAWER':
+		case 'TOGGLE_DRAWER':
 			return {
 				...state,
-				open: true,
+				isDrawerOpen: !state.isDrawerOpen,
 			};
-		case 'CLOSE_DRAWER':
+		case 'SET_CURRENT_USER':
 			return {
 				...state,
-				open: false,
+				userEmail: action.payload,
 			};
 		default:
 			return state;
