@@ -21,7 +21,7 @@ export default function CardGrid(props:any) {
 	const classes = useStyles();
 
 	return(
-		<div	className={clsx(classes.cardGrid)}>
+		<div className={clsx(classes.cardGrid)}>
 			{props.children}
 		</div>
 	);
