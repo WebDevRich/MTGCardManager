@@ -8,9 +8,13 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import * as EmailValidator from 'email-validator';
-import React, { useState } from 'react';
+import jwt_decode from 'jwt-decode';
+import React, { useContext, useState } from 'react';
+import { Redirect } from 'react-router-dom';
 import { loginUser, registerUser } from '../actions/authActions';
+import { Store } from '../App';
 import ButtonComponent from '../ButtonComponent/ButtonComponent';
+import { TokenTypes } from '../model/types';
 import PasswordField from '../PasswordField/PasswordField';
 
 const useStyles = makeStyles((theme:Theme) =>
@@ -56,6 +60,15 @@ export default function SignInForm(props:SignInFormProps) {
 	const [emailError, setEmailError] = useState(false);
 	const [submitError, setSubmitError] = useState(false);
 	const [existingUser, setExistingUser] = useState(false);
+	const { state, dispatch } = useContext(Store);
+
+	const setCurrentUser = (decoded:any) => {
+
+		return dispatch({
+			type: 'SET_CURRENT_USER',
+			payload: decoded,
+		});
+	};
 
 	function updateEmailValue(e:React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
 		setEmailValue(e.currentTarget.value);
@@ -125,6 +138,11 @@ export default function SignInForm(props:SignInFormProps) {
 					(response:any) => {
 						if (response.status !== 200) {
 							handleErrorResponse(response);
+						} else {
+							const { token } = response.data;
+							localStorage.setItem('jwtToken', token);
+							const decoded:TokenTypes = jwt_decode(token);
+							setCurrentUser(decoded.id);
 						}
 					},
 				);
@@ -142,55 +160,61 @@ export default function SignInForm(props:SignInFormProps) {
 	}
 
 	return(
-		<main className={classes.main}>
-			<Paper className={classes.paper}>
-				<Avatar className={classes.avatar}>
-					<LockOutlinedIcon />
-				</Avatar>
-				<Typography component='h1' variant='h5'>
-					Sign in / Register
-				</Typography>
-				<form className={classes.form} onSubmit={formSubmit}>
-					<FormControl margin='normal' error={emailError} required={true} fullWidth={true}>
-						<InputLabel	htmlFor='email'>Email Address</InputLabel>
-						<Input
-							id='email'
-							name='email'
-							autoComplete='email'
-							autoFocus={true}
-							onChange={updateEmailValue}
-						/>
-						{emailError &&
-							<FormHelperText>Please enter a valid email</FormHelperText>
+		<>
+			{ state.userEmail &&
+				<Redirect to='/' />
+			}
+
+			<main className={classes.main}>
+				<Paper className={classes.paper}>
+					<Avatar className={classes.avatar}>
+						<LockOutlinedIcon />
+					</Avatar>
+					<Typography component='h1' variant='h5'>
+						Sign in / Register
+					</Typography>
+					<form className={classes.form} onSubmit={formSubmit}>
+						<FormControl margin='normal' error={emailError} required={true} fullWidth={true}>
+							<InputLabel	htmlFor='email'>Email Address {state.userEmail}</InputLabel>
+							<Input
+								id='email'
+								name='email'
+								autoComplete='email'
+								autoFocus={true}
+								onChange={updateEmailValue}
+							/>
+							{emailError &&
+								<FormHelperText>Please enter a valid email</FormHelperText>
+							}
+						</FormControl>
+						<FormControl margin='normal' error={passwordError} required={true} fullWidth={true}>
+							<InputLabel htmlFor='password'>Password</InputLabel>
+							<PasswordField passwordError={passwordError} onChange={passwordValueUpdate} />
+						</FormControl>
+						<ButtonComponent
+							onClick={formSubmitButton}
+							fullWidth={true}
+							color='primary'
+							type='submit'
+							variant='contained'
+						>
+							{existingUser ? 'Sign In' : 'Register'}
+						</ButtonComponent>
+						{submitError &&
+							<FormHelperText error={true}>An account already exists with this email, please sign in.</FormHelperText>
 						}
-					</FormControl>
-					<FormControl margin='normal' error={passwordError} required={true} fullWidth={true}>
-						<InputLabel htmlFor='password'>Password</InputLabel>
-						<PasswordField passwordError={passwordError} onChange={passwordValueUpdate} />
-					</FormControl>
+					</form>
 					<ButtonComponent
-						onClick={formSubmitButton}
+						onClick={toggleExistingUser}
 						fullWidth={true}
-						color='primary'
+						color='default'
+						variant='text'
 						type='submit'
-						variant='contained'
 					>
-						{existingUser ? 'Sign In' : 'Register'}
+						{!existingUser ? 'Already have an account? Sign In...' : 'New here? Register...'}
 					</ButtonComponent>
-					{submitError &&
-						<FormHelperText error={true}>An account already exists with this email, please sign in.</FormHelperText>
-					}
-				</form>
-				<ButtonComponent
-					onClick={toggleExistingUser}
-					fullWidth={true}
-					color='default'
-					variant='text'
-					type='submit'
-				>
-					{!existingUser ? 'Already have an account? Sign In...' : 'New here? Register...'}
-				</ButtonComponent>
-			</Paper>
-		</main>
+				</Paper>
+			</main>
+		</>
 	);
 }

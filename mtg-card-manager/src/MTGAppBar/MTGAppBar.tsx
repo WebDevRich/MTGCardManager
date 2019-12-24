@@ -13,6 +13,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import clsx from 'clsx';
 import React, { useContext, useEffect } from 'react';
+import { Redirect } from 'react-router-dom';
 import { updateLibrary } from '../actions/updateLibrary';
 import { Store } from '../App';
 import ButtonComponent from '../ButtonComponent/ButtonComponent';
@@ -81,7 +82,6 @@ export default function MTGAppBar(props:any) {
 	const [cardList, setCardList] = React.useState([]);
 	const [searchTerm, setSearchTerm] = React.useState('');
 	const { state, dispatch } = useContext(Store);
-
 
 	function updateSearchTerm(value:any) {
 		setSearchTerm(value);
@@ -175,38 +175,44 @@ export default function MTGAppBar(props:any) {
 	};
 
 	return (
-		<AppBar
-			position='fixed'
-			className={clsx(classes.appBar, {
-				[classes.appBarShift]: state.open,
-			})}
-			color='secondary'
-		>
-			<Toolbar>
-				<IconButton
-					color='inherit'
-					aria-label='Open drawer'
-					onClick={handleOpenDrawer}
-					edge='start'
-					className={clsx(classes.menuButton, state.open && classes.hide)}
-				>
-					<MenuIcon />
-				</IconButton>
-				<Typography variant='h6' noWrap={true} className={classes.title}>
-					MTG Card Manager
-				</Typography>
-				<form noValidate={true} className={classes.searchForm} onSubmit={submitSearch}>
-					<div className={classes.search}>
-						<TextInput
-							inputValue={updateSearchTerm}
-							placeholder='Search...'
-						/>
-					</div>
-					<ButtonComponent onClick={submitSearch} color='primary' type='submit' variant='contained'>
-						<SearchIcon />
-					</ButtonComponent>
-				</form>
-			</Toolbar>
-		</AppBar>
+		<>
+			{ !state.userEmail &&
+				<Redirect to='/signin' />
+			}
+
+			<AppBar
+				position='fixed'
+				className={clsx(classes.appBar, {
+					[classes.appBarShift]: state.isDrawerOpen,
+				})}
+				color='secondary'
+			>
+				<Toolbar>
+					<IconButton
+						color='inherit'
+						aria-label='Open drawer'
+						onClick={handleOpenDrawer}
+						edge='start'
+						className={clsx(classes.menuButton, state.isDrawerOpen && classes.hide)}
+					>
+						<MenuIcon />
+					</IconButton>
+					<Typography variant='h6' noWrap={true} className={classes.title}>
+						MTG Card Manager {state.userEmail}
+					</Typography>
+					<form noValidate={true} className={classes.searchForm} onSubmit={submitSearch}>
+						<div className={classes.search}>
+							<TextInput
+								inputValue={updateSearchTerm}
+								placeholder='Search...'
+							/>
+						</div>
+						<ButtonComponent onClick={submitSearch} color='primary' type='submit' variant='contained'>
+							<SearchIcon />
+						</ButtonComponent>
+					</form>
+				</Toolbar>
+			</AppBar>
+		</>
 	);
 }

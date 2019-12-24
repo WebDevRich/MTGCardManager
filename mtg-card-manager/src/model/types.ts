@@ -26,3 +26,7 @@ export enum ButtonVariant {
 	flat = 'flat',
 	raised = 'raised',
 }
+
+export interface TokenTypes {
+	id: String;
+}
